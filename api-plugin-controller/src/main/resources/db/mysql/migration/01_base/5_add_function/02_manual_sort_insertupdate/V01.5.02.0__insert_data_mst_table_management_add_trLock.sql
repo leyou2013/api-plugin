@@ -1,8 +1,0 @@
--- テーブル管理マスタ
--- ロックテーブル
-INSERT IGNORE INTO `mst_table_management` (`table_no`,`is_item_no`,`item_order`,`table_name`,`item_name`,`data_type`,`display_flag`,`not_null_flag`) VALUES ('trLock',             'lockSerialId',             1, 'ロックテーブル',                     'シリアルID',                1, 0,0);
-INSERT IGNORE INTO `mst_table_management` (`table_no`,`is_item_no`,`item_order`,`table_name`,`item_name`,`data_type`,`display_flag`,`not_null_flag`) VALUES ('trLock',             'deviceId',                 2, 'ロックテーブル',                     'デバイスID',                0, 1,1);
-INSERT IGNORE INTO `mst_table_management` (`table_no`,`is_item_no`,`item_order`,`table_name`,`item_name`,`data_type`,`display_flag`,`not_null_flag`) VALUES ('trLock',             'scanCode',                 3, 'ロックテーブル',                     'スキャンコード',            0, 1,1);
-INSERT IGNORE INTO `mst_table_management` (`table_no`,`is_item_no`,`item_order`,`table_name`,`item_name`,`data_type`,`display_flag`,`not_null_flag`) VALUES ('trLock',             'lockGroup',                4, 'ロックテーブル',                     'ロックグループ',            0, 1,1);
-INSERT IGNORE INTO `mst_table_management` (`table_no`,`is_item_no`,`item_order`,`table_name`,`item_name`,`data_type`,`display_flag`,`not_null_flag`) VALUES ('trLock',             'insertTime',               5, 'ロックテーブル',                     '登録日時',                  3, 1,0);
-INSERT IGNORE INTO `mst_table_management` (`table_no`,`is_item_no`,`item_order`,`table_name`,`item_name`,`data_type`,`display_flag`,`not_null_flag`) VALUES ('trLock',             'updateTime',               6, 'ロックテーブル',                     '更新日時',                  3, 1,0);

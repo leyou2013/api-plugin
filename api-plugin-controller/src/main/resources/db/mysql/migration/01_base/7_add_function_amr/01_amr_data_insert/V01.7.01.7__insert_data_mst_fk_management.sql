@@ -1,2 +1,0 @@
--- FK管理マスタ
---INSERT IGNORE INTO `mst_fk_management` (`table_no`,`is_item_no`,`foreign_table_no`,`foreign_is_item_no`,`foreign_is_item_update_flag`) VALUES ('mstPosition','positionNo','mstLocation','positionNo',0);
