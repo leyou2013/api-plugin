@@ -1,0 +1,3 @@
+-- 仕分け設定マスタ
+INSERT IGNORE INTO `mst_sorting_setting` (`task_type`,`sorting_key_item_no1`,`sorting_key_item_no2`,`sorting_key_item_no3`,`sorting_key_item_no4`,`sorting_key_item_no5`) VALUES (1, 'shopNo',    null, null, null, null);
+INSERT IGNORE INTO `mst_sorting_setting` (`task_type`,`sorting_key_item_no1`,`sorting_key_item_no2`,`sorting_key_item_no3`,`sorting_key_item_no4`,`sorting_key_item_no5`) VALUES (5, 'foreignLinkNo1', 'scanCode', null, null, null);

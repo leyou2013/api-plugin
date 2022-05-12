@@ -1,0 +1,37 @@
+${AnsiColor.BRIGHT_BLUE}  #####  ${AnsiColor.WHITE}                                                      ${AnsiColor.MAGENTA}     ${AnsiColor.WHITE}
+${AnsiColor.BRIGHT_BLUE} #     # ${AnsiColor.WHITE}#####  #####  # #    #  ####     #####   ####   ####  ${AnsiColor.MAGENTA}#####${AnsiColor.WHITE}
+${AnsiColor.BRIGHT_BLUE} #       ${AnsiColor.WHITE}#    # #    # # ##   # #    #    #    # #    # #    # ${AnsiColor.MAGENTA}  #  ${AnsiColor.WHITE}
+${AnsiColor.BRIGHT_BLUE}  #####  ${AnsiColor.WHITE}#    # #    # # # #  # #         #####  #    # #    # ${AnsiColor.MAGENTA}  #  ${AnsiColor.WHITE}
+${AnsiColor.BRIGHT_BLUE}       # ${AnsiColor.WHITE}#####  #####  # #  # # #  ###    #    # #    # #    # ${AnsiColor.MAGENTA}  #  ${AnsiColor.WHITE}
+${AnsiColor.BRIGHT_BLUE} #     # ${AnsiColor.WHITE}#      #   #  # #   ## #    #    #    # #    # #    # ${AnsiColor.MAGENTA}  #  ${AnsiColor.WHITE}
+${AnsiColor.BRIGHT_BLUE}  #####  ${AnsiColor.WHITE}#      #    # # #    #  ####     #####   ####   ####  ${AnsiColor.MAGENTA}  #  ${AnsiColor.WHITE}    ${spring-boot.version}
+${AnsiColor.RED}
+${AnsiColor.RED}                            .MMMMMMMMMb
+${AnsiColor.RED}                            dMMMMMMMMMM,
+${AnsiColor.RED}            MMMMMM         .MMMMMMMMMMMN
+${AnsiColor.RED}            MMMMMM        .MMMMNMMMMMMMMp
+${AnsiColor.RED}            MMMMMM        JMMMMMM\WNMMNMM,
+${AnsiColor.RED}            MMMNMM       .MMNMMMF .MMMMMMb
+${AnsiColor.RED}            MMMMMM       dMMMNM#`  JMMNMMM[
+${AnsiColor.RED}   dMMMMMMMMMNMMMMMMMMMMF MMMMN%    MMMMMMN.
+${AnsiColor.RED}   dMMMMMMMMMMNMMNMMMMM#` MMMMF     ,MMNMMMb
+${AnsiColor.RED}   dMMMMMMMMMMMMMM"""""N&&MMMM!      dMMMNMM;
+${AnsiColor.RED}            MMMNMM    .MMMMMMNggggggg.MMMMMMN.
+${AnsiColor.RED}            MMMMMM   .MMMMMMMMMMMMMMMb-MMNMMMb
+${AnsiColor.RED}            MMNMMM   JMMNMMMMMMMMMMMMM_dMMNMMM,
+${AnsiColor.RED}            MMMMMM  .MMMMMNF           .MMMMMMN
+${AnsiColor.RED}                   .MMMNMM#`            ?MMMMMM[
+${AnsiColor.RED}                   (MMMMMM%              HMNMMMM.
+${AnsiColor.RED}                  .MMNMMMF               ,MMMMMMb
+${AnsiColor.WHITE}
+          ${AnsiColor.BRIGHT_YELLOW}+Automation Inc. Warehouse Execution system.${AnsiColor.WHITE}
+
+${AnsiColor.GREEN}== Server Infomation ===========================================================================${AnsiColor.WHITE}
+${AnsiColor.GREEN}  Root profile      : application.yml${AnsiColor.WHITE}
+${AnsiColor.GREEN}Active profiles     : application-${spring.profiles.active}.yml${AnsiColor.WHITE}
+${AnsiColor.GREEN}  API   Server Port : ${server.port}${AnsiColor.WHITE}
+${AnsiColor.GREEN}  Primary DB        : ${spring.flyway.placeholders.db-name}${AnsiColor.WHITE}
+${AnsiColor.GREEN}Secondary DB        : ${spring.flyway.placeholders.db2-name}${AnsiColor.WHITE}
+${AnsiColor.GREEN}================================================================================================${AnsiColor.WHITE}
+
+${AnsiColor.WHITE}${spring.flyway.placeholders.setting.is-name}を起動します。${AnsiColor.WHITE}

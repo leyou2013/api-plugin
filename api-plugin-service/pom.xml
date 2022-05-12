@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>api-plugin-service</artifactId>
+    <packaging>pom</packaging>
+    <name>${project.artifactId}</name>
+    <description>plus-automation api-plugin service module</description>
+
+    <parent>
+        <artifactId>api-plugin</artifactId>
+        <groupId>com.plus_automation</groupId>
+        <version>1.0.0</version>
+    </parent>
+
+    <modules>
+        <module>api-plugin-service-rds</module>
+    </modules>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.plus_automation</groupId>
+            <artifactId>api-plugin-repository</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.plus_automation</groupId>
+            <artifactId>api-plugin-common</artifactId>
+        </dependency>
+    </dependencies>
+</project>

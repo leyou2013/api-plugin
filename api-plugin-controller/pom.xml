@@ -1,0 +1,405 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>api-plugin-controller</artifactId>
+    <version>1.0.0</version>
+    <packaging>jar</packaging>
+
+    <!-- 親POM -->
+    <parent>
+        <groupId>com.plus_automation</groupId>
+        <artifactId>api-plugin</artifactId>
+        <version>1.0.0</version>
+    </parent>
+
+    <name>${project.artifactId}-${project.version}</name>
+    <description>plus-automation backend wes controller module</description>
+
+    <dependencies>
+        <!-- [Spring Boot Starter WEBライブラリ] -->
+        <!-- Spring BootでWEBアプリを作成するために使用。 -->
+        <!-- Tomcatを内蔵したjarの作成。Jacksonによる、リクエスト/レスポンスのオブジェクト⇔JSONの相互変換。 -->
+        <!-- リクエスト/レスポンスのVaridataion（検証）などを行うことができるようになる。 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <!-- [Spring Boot Configuration Processorライブラリ] -->
+        <!-- データソースを複数持つための設定を行うために導入。 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true
+            </optional> <!-- コンパイルする時だけ必要なのでjar/warにパッケージングされないようにする -->
+        </dependency>
+
+        <!-- [Spring Boot Actuatorライブラリ] -->
+        <!-- 解析用のエンドポイントURIを追加する。 -->
+        <!-- エンドポイント一覧：https://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-features.html#production-ready-endpoints -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+
+        <!-- [Spring Data RESTライブラリ] -->
+        <!-- リポジトリを直で呼び出せるエンドポイントURIを追加する。 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-rest</artifactId>
+        </dependency>
+        <!--Webソケット -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-websocket</artifactId>
+        </dependency>
+
+        <!-- [Spring Boot Dev Toolsライブラリ] -->
+        <!-- 開発用に便利な開発補助モジュールを追加する。 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <optional>true
+            </optional> <!-- 本番用に入れるツールではないので、jar/warにパッケージングされないようにする -->
+        </dependency>
+
+        <!-- [Spring Web Servicesライブラリ] -->
+        <!-- Spring でSOAPベースのWebサービスを利用するために使用。 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web-services</artifactId>
+        </dependency>
+        <!-- [Spring Web Servicesライブラリ] -->
+        <!-- Spring でSOAPベースのWebサービスを利用するために使用。 -->
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+        </dependency>
+        <!-- ========================================================= -->
+
+        <!-- ========================================================= -->
+
+        <!-- テスト関連 =============================================== -->
+        <!-- [Spring Boot Starter Testライブラリ] -->
+        <!-- Spring Bootでテストを行うために使用。 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- [SpringfoxのSwagger UIライブラリ] -->
+        <!-- springfox-swagger2により生成されたJSONからWeb API仕様書を生成するライブラリ。 -->
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+            <version>${springfox.version}</version>
+        </dependency>
+
+        <!-- [SpringfoxのBean Validatorsライブラリ] -->
+        <!-- 検証（@valid）で設定した内容をドキュメントとして出力することをサポートする。 -->
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-bean-validators</artifactId>
+            <version>${springfox.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+        </dependency>
+        <!-- [Flywayライブラリ] -->
+        <!-- DBマイグレーションツール。DBのテーブル作成やデータ挿入を自動化とバージョン管理をしてくれる。 -->
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.plus_automation</groupId>
+            <artifactId>api-plugin-common</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.plus_automation</groupId>
+            <artifactId>api-plugin-service</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.plus_automation</groupId>
+            <artifactId>platform-security</artifactId>
+            <version>1.0.1</version>
+        </dependency>
+        
+        <!-- [認証モジュール] -->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>1.2.75</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+            <version>3.17</version>
+            <scope>compile</scope>
+        </dependency>
+    </dependencies>
+
+    <!-- ビルド時の設定 -->
+    <build>
+        <plugins>
+            <!-- [Spring Boot Maven Plugin ライブラリ] -->
+            <!-- Spring Bootが提供するビルド環境。Spring Boot環境でMavenビルドを行うために必須。 -->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <executable>false
+                    </executable> <!-- trueを設定するとbashスクリプトを組み込んだFully Executable Jarを作成する。実行環境がLinuxではない場合は、falseにする -->
+                </configuration>
+            </plugin>
+
+            <!-- [Mavenインストール Plugin ライブラリ] -->
+            <!-- ローカルjarがある場合、ローカルリポジトリへの登録を行う。このプラグインはSpring Boot Maven Plugin ライブラリに内蔵されているため、特に設定がなければ必要ない。 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-install-plugin</artifactId>
+            </plugin>
+
+            <!-- [Mavenコンパイラ Plugin ライブラリ] -->
+            <!-- コンパイル時に追加で設定したい場合に使う。このプラグインはSpring Boot Maven Plugin ライブラリに内蔵されているため、特に設定がなければ必要ない。 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <!-- 設定 -->
+                <configuration>
+                    <compilerArgs>
+                        <!-- 未検査チェックを行う -->
+                        <arg>-Xlint:unchecked</arg>
+                    </compilerArgs>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <!--<archive>-->
+                    <!--<manifest>-->
+                    <!--<mainClass>${exec.mainClass}</mainClass>-->
+                    <!--</manifest>-->
+                    <!--</archive>-->
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                </configuration>
+            </plugin>
+            <!-- [Maven Surefire Plugin ライブラリ] -->
+            <!-- Mavenでテストを行った際に、レポートを出力するライブラリ。 -->
+            <!-- このplugin自体は別に設定しなくてもSpring Boot Maven Pluginが入っていればレポート出力はされる。 -->
+            <!-- しかし、Mavenでテストをする際にJUnitでは文字化けしないのに、mvn testでは文字化けするため、その原因を取り除くために追加設定を行う（文字化けするだけなら良いが、FlywayなどのSQLファイル読み込みでDB登録した文字も文字化けする→つまりテストが失敗する）。 -->
+            <!-- 上記は、JUnitがMavenの実行プロセスとは別で起動されるということが原因で起こる。そのため、下記plugin設定で明確にエンコードをすべてUTF-8として設定して合わせる。 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <junitArtifactName>junit:junit</junitArtifactName>
+                    <!-- maven（というよりsurefire）内臓のクラスローダを使うかどうか -->
+                    <!-- trueでは不具合があるらしく、falseで対処する。以下を参照。 -->
+                    <!-- https://stackoverflow.com/questions/53010200/maven-surefire-could-not-find-forkedbooter-class?noredirect=1&lq=1 -->
+                    <useSystemClassLoader>false</useSystemClassLoader>
+                    <!-- 特定のテストが完了した際に、System.exit()によって終了する代わりにハングすることがある。このハングのタイムアウトはデフォルトで30秒となっているが、本来は正常に終了できた場合に30秒は短すぎるため伸ばす。 -->
+                    <!-- 上記useSystemClassLoaderがfalseでもフォークされたVMがクラッシュする場合、下記の秒数を上げる（非常に時間のかかるテストがある場合、分岐したJVMがクラッシュすることがある模様）。 -->
+                    <!-- https://stackoverflow.com/questions/46831762/maven-build-and-maven-failsafe-plugin-the-forked-vm-terminated-without-properl -->
+                    <forkedProcessExitTimeoutInSeconds>600
+                    </forkedProcessExitTimeoutInSeconds>
+                    <!-- テスト対象ソースコードのエンコード。！！@{argLine}は他の場所で設定したargsを上書きして消さないようにするために入れておく！！ -->
+                    <!-- add-opensのjava.base/～ALL-UNNAMEDについては下記を参照。 -->
+                    <!-- 参考URL：https://docs.oracle.com/javase/jp/9/migrate/toc.htm -->
+                    <!-- jdk.internal.misc：Nettyで使用 -->
+                    <!-- java.base/java.nio：Nettyで使用 -->
+                    <argLine>@{argLine} -Dfile.encoding=UTF-8 --add-opens
+                        java.base/jdk.internal.misc=ALL-UNNAMED --add-opens
+                        java.base/java.nio=ALL-UNNAMED
+                    </argLine>
+                    <!-- レポート出力ファイル(*-out.txt)のエンコード -->
+                    <encoding>UTF-8</encoding>
+                    <skipTests>false
+                    </skipTests>  <!-- trueにするとテストをスキップできるが推奨しない。テストしたくないような場面では実行時引数で指定する（-Dmaven.test.skip=true） -->
+                </configuration>
+            </plugin>
+
+            <!-- [Git Commit ID Pluginライブラリ] -->
+            <!-- jarの中にgit.propertiesを埋め込むことができる。 -->
+            <plugin>
+                <groupId>pl.project13.maven</groupId>
+                <artifactId>git-commit-id-plugin</artifactId>
+                <configuration>
+                    <!-- Git接続せずに情報を取得する -->
+                    <offline>true</offline>
+                    <!-- タイムゾーンがデフォルトではUTCのため変更する -->
+                    <dateFormat>yyyy-MM-dd HH:mm:ssZ</dateFormat>
+                    <dateFormatTimeZone>JST</dateFormatTimeZone>
+                </configuration>
+            </plugin>
+
+            <!-- [JaCoCo Maven Pluginライブラリ] -->
+            <!-- テスト時にカバレッジファイルjacoco.execが生成される。 -->
+            <!-- jacoco.execが生成された状態でさらに「mvn jacoco:report」コマンドを実行すると、htmlファイルのレポートを出力する。 -->
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${jacoco-maven-plugin.version}</version>
+                <executions>
+                    <!-- VM引数としてテスト対象のアプリケーションに渡すことができるJaCoCoランタイムエージェントを指すプロパティを準備する。 -->
+                    <!-- maven-surefire-pluginでargLineを設定している場合は、maven側で上書きするため、 -->
+                    <!-- @{argLine}をmaven側に追加する。例：「<argLine>@{argLine} -your -extra -arguments</argLine>」 -->
+                    <!-- 参考URL：https://www.eclemma.org/jacoco/trunk/doc/prepare-agent-mojo.html -->
+                    <execution>
+                        <id>default-prepare-agent</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <!-- 単一プロジェクトのテスト用コードカバレッジレポートを作成する（出力は複数の形式（HTML、XML、およびCSV））。 -->
+                    <execution>
+                        <id>default-report</id>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                    <!-- テスト時にカバレッジ計測 -->
+                    <execution>
+                        <id>report</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                    <!-- コードカバレッジがrulesで指定した条件を満たしているか確認する。 -->
+                    <execution>
+                        <id>default-check</id>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- SpotBugs Maven Plugin ライブラリ -->
+            <plugin>
+                <groupId>com.github.spotbugs</groupId>
+                <artifactId>spotbugs-maven-plugin</artifactId>
+                <version>${spotbugs-maven-plugin.version}</version>
+                <dependencies>
+                    <!-- SpotBugsのバージョンを指定する -->
+                    <dependency>
+                        <groupId>com.github.spotbugs</groupId>
+                        <artifactId>spotbugs</artifactId>
+                        <version>${spotbugs.version}</version>
+                    </dependency>
+                </dependencies>
+                <!-- SpotBugsの設定 -->
+                <configuration>
+                    <!-- 解析力の設定 -->
+                    <!-- [設定値]Default:デフォルト値(more)、more:参照クラスのプロシージャ間解析を無効、バイトコードが長いときはスキップする。その他はmaxと同じ、max:最大限解析、min:メモリ消費量も増やす解析を無効） -->
+                    <!-- 詳細URL：https://spotbugs.readthedocs.io/ja/latest/effort.html -->
+                    <effort>max</effort>
+                    <!-- しきい値の設定 -->
+                    <threshold>Default</threshold>
+                    <!-- 問題が見つかったときにビルドエラーとする(true)/しない(false) -->
+                    <failOnError>true</failOnError>
+                    <!-- 対象ソースのエンコード -->
+                    <sourceEncoding>UTF-8</sourceEncoding>
+                    <!-- XMLレポートファイル出力有無 -->
+                    <xmlOutput>true</xmlOutput>
+                    <!-- XMLレポートファイル出力ディレクトリ指定 -->
+                    <xmlOutputDirectory>target/spotbugs</xmlOutputDirectory>
+                    <!-- 除外フィルタファイルパス -->
+                    <excludeFilterFile>spotbugs_exclude.xml</excludeFilterFile>
+                </configuration>
+                <!-- SpotBugs実行 -->
+                <executions>
+                    <execution>
+                        <id>spotbugs</id>
+                        <!-- 実行フェーズ -->
+                        <phase>test</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- [JavaDocライブラリ] -->
+            <!-- JavaDocフォーマットのコメントを元にJavaDoc仕様書を生成するライブラリ。 -->
+            <!-- ●実行コマンド：mvn javadoc:javadoc -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <!-- 実行 -->
+                <executions>
+                    <!-- Javadocのjarを作る -->
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <!-- 設定 -->
+                <configuration>
+                    <defaultVersion>${project.version}</defaultVersion>
+                    <!-- Javaのバージョン -->
+                    <source>${java.version}</source>
+                    <!-- 作成者を含めるかどうか -->
+                    <author>true</author>
+                    <!-- JavaDocを生成するためのソースの場所 -->
+                    <!-- メモ：ソース場所は下記Delombokライブラリと合わせて使うため、Delombokが生成するソースを指定する。 -->
+                    <sourcepath>target/generated-sources/delombok</sourcepath>
+                    <!-- Javadocに含めるクラスのアクセスレベル -->
+                    <show>protected</show>
+                    <!-- 入力ソースコードのエンコード -->
+                    <encoding>UTF-8</encoding>
+                    <!-- 出力Javadocのエンコード -->
+                    <docencoding>UTF-8</docencoding>
+                    <!-- 出力JavadocのHTML内のmetaタグに出力されるエンコード -->
+                    <charset>UTF-8</charset>
+                    <!-- Javadocのチェック。missingを無効にする（Lombokにより出力されたドキュメントも対象となっているため、欠落しているJavadocコメントまたはタグの厳密チェックを無効にする）。 -->
+                    <doclint>all,-missing</doclint>
+                </configuration>
+            </plugin>
+
+            <!-- [ライブラリバージョン管理ツール] -->
+            <!-- pom.xml内のライブラリのバージョンを管理するためのライブラリ。 -->
+            <!-- === 以下コマンド一覧 === -->
+            <!-- 1.ライブラリバージョン確認（依存関係全チェック） - レポート無し -->
+            <!-- ●実行コマンド：mvn versions:display-dependency-updates -->
+            <!-- 依存しているすべてのjarのバージョンをチェックする。 -->
+            <!-- 2.ライブラリバージョン確認（依存関係全チェック） - レポート有り -->
+            <!-- ●実行コマンド：mvn versions:dependency-updates-report -->
+            <!-- 依存しているすべてのjarのバージョンをチェックする。 -->
+            <!-- 3.Mavenプラグインの最新バージョン確認 -->
+            <!-- ●実行コマンド：mvn versions:display-plugin-updates -->
+            <!-- 4.ライブラリのバージョンを最新にする -->
+            <!-- ●実行コマンド：mvn versions:use-latest-releases -->
+            <!-- jarのバージョンを最新に更新する。 -->
+            <!-- .更新した内容を適用する -->
+            <!-- ●実行コマンド：mvn versions:commit -->
+            <!-- 上記コマンドの中で更新したpom.xmlのバックアップ「pom.xml.versionsBackup」を消して更新を適用する。 -->
+            <!-- .更新した内容を破棄する -->
+            <!-- ●実行コマンド：mvn versions:revert -->
+            <!-- 上記コマンドの中で更新したpom.xmlを変更前に戻す（バックアップ「pom.xml.versionsBackup」が適用される）。 -->
+            <!-- その他コマンドは下記URLを参照。 -->
+            <!-- https://www.mojohaus.org/versions-maven-plugin/plugin-info.html -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>versions-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

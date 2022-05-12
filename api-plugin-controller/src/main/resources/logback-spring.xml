@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration>
+<!-- 上記DOCTYPEは、Eclipse上でDTDが無いことの警告を回避するために入れている。XML検証を無効にしたくないため対処。 -->
+
+<!-- Logback設定（application.ymlや各application-xxx.ymlのログ関連の項目の値を使う箇所もあり） -->
+<configuration scan="false" scanPeriod="60 seconds"> <!-- ※configuration要素のscan属性をtrueにすると、設定ファイルが変更されたら自動的に再読み込みする。 -->
+  <!-- SpringBootのデフォルト設定を読み込む -->
+  <include resource="org/springframework/boot/logging/logback/defaults.xml" />
+  <!-- プロパティ設定（長くなりそうな値を変数化） -->
+  <!-- ログファイルパス -->
+  <property name="LOG_FILE"
+    value="${LOG_FILE:-${LOG_PATH:-${LOG_TEMP:-${java.io.tmpdir:-/tmp}}}/spring.log}" />
+  <!-- エラーログファイルパス -->
+  <property name="ERROR_LOG_FILE" value="log/error.log}" />
+  <!-- コンソールログパターン -->
+  <property name="ORIGINAL_CONSOLE_LOG_PATTERN"
+    value="%clr(%d{${LOG_DATEFORMAT_PATTERN:-yyyy-MM-dd HH:mm:ss.SSS}}){cyan} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n" />
+  <!-- ファイルログパターン -->
+  <property name="ORIGINAL_FILE_LOG_PATTERN"
+    value="%d{${LOG_DATEFORMAT_PATTERN:-yyyy-MM-dd HH:mm:ss.SSS}} ${LOG_LEVEL_PATTERN:-%5p} ${PID:- } --- [%-30t] %-108logger : %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}" />
+
+  <!-- ★コンソールアペンダ設定（ログ出力先、パターン設定） -->
+  <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+    <!-- Windowsでカラー表示する（する:true、しない:false） -->
+    <withJansi>false</withJansi>
+    <!-- ↑デフォルトアペンダの場所：spring-boot-x.x.x.RELEASE.jar/org/springframework/boot/logging/logback/console-appender.xml -->
+    <encoder>
+      <!-- コンソールの文字コード -->
+      <charset>${CONSOLE_ENCODING:-UTF-8}</charset>
+      <!-- ログ出力パターン設定 -->
+      <pattern>${ORIGINAL_CONSOLE_LOG_PATTERN}</pattern>
+      <!-- ↑デフォルトパターンの場所（CONSOLE_LOG_PATTERNプロパティ内）：spring-boot-x.x.x.RELEASE.jar/org/springframework/boot/logging/logback/defaults.xml -->
+    </encoder>
+    <!-- INFOレベル以上のログのみを出力するためのフィルタ -->
+    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+      <level>INFO</level>
+    </filter>
+  </appender>
+
+  <!-- ★ファイルアペンダ設定（ログ出力先、パターン設定） -->
+  <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <!-- ↑デフォルトアペンダの場所：spring-boot-x.x.x.RELEASE.jar/org/springframework/boot/logging/logback/file-appender.xml -->
+    <encoder>
+      <!-- ログファイルの文字コード -->
+      <charset>UTF-8</charset>
+      <!-- ログ出力パターン設定 -->
+      <pattern>${ORIGINAL_FILE_LOG_PATTERN}</pattern>
+      <!-- ↑デフォルトパターンの場所（FILE_LOG_PATTERNプロパティ内）：spring-boot-x.x.x.RELEASE.jar/org/springframework/boot/logging/logback/defaults.xml -->
+    </encoder>
+    <!-- ログ出力先ファイルパス設定 -->
+    <file>${LOG_FILE}</file>
+    <!-- ログローテーション設定 -->
+    <rollingPolicy
+      class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+      <cleanHistoryOnStart>${LOG_FILE_CLEAN_HISTORY_ON_START:-false}</cleanHistoryOnStart>
+      <fileNamePattern>${ROLLING_FILE_NAME_PATTERN:-${LOG_FILE}.%d{yyyy-MM-dd}.%i.log.gz}</fileNamePattern>
+      <maxFileSize>${LOG_FILE_MAX_SIZE:-100MB}</maxFileSize>
+      <maxHistory>${LOG_FILE_MAX_HISTORY:-14}</maxHistory>
+      <totalSizeCap>${LOG_FILE_TOTAL_SIZE_CAP:-0}</totalSizeCap>
+    </rollingPolicy>
+  </appender>
+
+  <!-- ★エラーファイルアペンダ設定（ログ出力先、パターン設定） -->
+  <appender name="ERROR_FILE"
+    class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <encoder>
+      <!-- ログファイルの文字コード -->
+      <charset>UTF-8</charset>
+      <!-- ログ出力パターン設定 -->
+      <pattern>${ORIGINAL_FILE_LOG_PATTERN}</pattern>
+    </encoder>
+    <!-- ログ出力先ファイルパス設定 -->
+    <file>${ERROR_LOG_FILE}</file>
+    <!-- WARNレベル以上のログのみを出力するためのフィルタ -->
+    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+      <level>WARN</level>
+    </filter>
+    <!-- ログローテーション設定 -->
+    <rollingPolicy
+      class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+      <cleanHistoryOnStart>${LOG_FILE_CLEAN_HISTORY_ON_START:-false}</cleanHistoryOnStart>
+      <fileNamePattern>${ROLLING_FILE_NAME_PATTERN:-${ERROR_LOG_FILE}.%d{yyyy-MM-dd}.%i.log.gz}</fileNamePattern>
+      <maxFileSize>${LOG_FILE_MAX_SIZE:-20MB}</maxFileSize>
+      <maxHistory>${LOG_FILE_MAX_HISTORY:-90}</maxHistory>
+      <totalSizeCap>${LOG_FILE_TOTAL_SIZE_CAP:-0}</totalSizeCap>
+    </rollingPolicy>
+  </appender>
+
+  <!-- ★ログマーカのフィルタ設定 -->
+  <!-- DENY：出力は完全に中断される（他のフィルタの処理はスキップされる） -->
+  <!-- ACCEPT：出力が許可される（他のフィルタの処理はスキップされる） -->
+  <!-- NEUTRAL：現在のフィルタはスキップされ次のフィルタに処理が送られる -->
+  <!-- ハートビートメッセージ（WCS→中間システム）ログマーカフィルタ -->
+  <turboFilter class="ch.qos.logback.classic.turbo.MarkerFilter">
+    <Marker>600_MSG</Marker>
+    <OnMatch>DENY</OnMatch>
+  </turboFilter>
+  <turboFilter class="ch.qos.logback.classic.turbo.MarkerFilter">
+    <Marker>RCS_HEARTBEAT_MSG</Marker>
+    <OnMatch>DENY</OnMatch>
+  </turboFilter>
+  <!-- ハートビートメッセージ（中間システム→WCS）ログマーカフィルタ -->
+  <turboFilter class="ch.qos.logback.classic.turbo.MarkerFilter">
+    <Marker>700_MSG</Marker>
+    <OnMatch>DENY</OnMatch>
+  </turboFilter>
+  <turboFilter class="ch.qos.logback.classic.turbo.MarkerFilter">
+    <Marker>WMS_HEARTBEAT_MSG</Marker>
+    <OnMatch>DENY</OnMatch>
+  </turboFilter>
+
+  <!-- ★上記アペンダの非同期化 -->
+  <appender name="ASYNC_CONSOLE" class="ch.qos.logback.classic.AsyncAppender">
+    <queueSize>512</queueSize>
+    <appender-ref ref="CONSOLE" />
+  </appender>
+  <appender name="ASYNC_FILE" class="ch.qos.logback.classic.AsyncAppender">
+    <queueSize>1024</queueSize>
+    <appender-ref ref="FILE" />
+  </appender>
+
+  <!-- ★アペンダ登録設定（ここに記載したものが実際に出力される） -->
+  <root level="INFO">
+    <appender-ref ref="ASYNC_CONSOLE" />
+    <appender-ref ref="ASYNC_FILE" />
+    <appender-ref ref="ERROR_FILE" />
+  </root>
+</configuration>

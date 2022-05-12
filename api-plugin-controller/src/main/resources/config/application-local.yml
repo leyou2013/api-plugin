@@ -1,0 +1,1037 @@
+# === プロファイル ================================================
+# ●サーバ個別設定
+server:
+  # APIサーバのポート（WEB画面のポート）
+  # ★テストの場合は繋げたりしないため「0」を推奨。0を指定すると、ランダムなポート番号でAPIサーバを起動することができる。
+  port: 8888
+  # 自己証明書を使ってHTTPSを有効化する場合は以下のコメントを外す ----------------------
+  #   JDKのbinにあるkeytoolを使って自己証明書を作ることができる。
+  #   例）keytool -genkey -alias tomcat -storetype PKCS12 -keyalg RSA -keysize 2048 -keystore keystore.p12 -validity 3650
+  # 電子証明書の場所（VM引数から-Dserver.ssl.keyStore=xxxでも可能）
+  #  ssl.key-store: bin/keystore.p12
+  # 証明書の秘密鍵パスワード（VM引数から-Dserver.ssl.keyStorePassword=xxxでも可能）
+  #  ssl.key-store-password: 6tkJL5NZvRGyUw
+  # 秘密鍵ストアファイルの形式：PKCS12 か JKS（VM引数から-Dserver.ssl.keyStoreType=xxxでも可能）
+  #  ssl.keyStoreType: PKCS12
+  # 証明書のエイリアス名。他の証明書と被らないようにする（VM引数から-Dserver.ssl.keyAliasxxxでも可能）
+  #  ssl.keyAlias: tomcat
+  # ----------------------------------------------------------------------
+  # Tomcat設定
+  tomcat:
+    # Tomcatのベースディレクトリ指定。このディレクトリ配下に「/work/Tomcat」というディレクトリを作成する
+    basedir: ./
+    # Tomcatのアクセスログ
+    accesslog:
+      # Tomcatのアクセスログを出力する（true）、しない（false）
+      enabled: true
+      # Tomcatのアクセスログの出力ディレクトリ名。[Tomcatのベースディレクトリ]/[以下で設定したディレクトリ]を作成する
+      directory: log
+      # Tomcatのアクセスログのファイル名先頭文字
+      prefix: access_log
+      # Tomcatのアクセスログのファイル名末尾文字
+      suffix: .log
+    # URLのクエリ文字に以下の記号が指定された場合にエラーにせず、通常のリクエストとして処理する。
+    relaxedQueryChars: <, >, [, ], \, ^, `, {, }, |, "
+# ●SpringBoot個別設定
+spring:
+  # リクエストメッセージのDEBUGログをmaskedしない（true）、する（false）
+  http.log-request-details: true
+  # Lazy Initializationの有効化/無効化。ApplicationContextのBean生成をアプリケーション起動時ではなく、対象のBeanが呼び出されたときに行うかどうかの設定
+  main.lazy-initialization: false
+  # サーブレット
+  servlet:
+    # ファイル設定
+    multipart:
+      # すべてのファイルの最大サイズ
+      max-request-size: 100MB
+      # 単一ファイルの最大サイズ
+      max-file-size: 100MB
+  # プロファイル名
+  profiles: local
+  # DB個別設定
+  datasource:
+    # DB個別設定（プライマリ）
+    datasource1:
+      # 使うJDBCドライバ（プライマリ）
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      # DB接続URL
+      # 基本構文：プロトコル//[ホスト名][/データベース名][?プロパティ]...
+      # URLの構文の詳細 -> https://dev.mysql.com/doc/connector-j/8.0/en/connector-j-reference-jdbc-url-format.html
+      # プロパティの詳細 -> https://dev.mysql.com/doc/connector-j/8.0/en/connector-j-reference-configuration-properties.html
+      url: jdbc:mysql://localhost:3306/dev2?allowPublicKeyRetrieval=true&autoReconnect=true&useSSL=false&useUnicode=true&characterEncoding=utf8&useJDBCCompliantTimezoneShift=false&useLegacyDatetimeCode=false&serverTimezone=JST&rewriteBatchedStatements=true&allowMultiQueries=true
+      # ※設定値詳細：
+      #   allowPublicKeyRetrieval        → デフォルトはfalse。サーバー側から公開鍵を取得するための特別なハンドシェイクを許可(true)/禁止(false)にする設定。ping送信時に“Public Key Retrieval is not allowed”というエラーが返ってきた場合、この値をtrueに設定するとpingが成功するようになる。
+      #   autoReconnect                  → デフォルトはfalse。MySQLでは、デフォルトで8時間以上アイドル状態の接続がある場合に、接続を切断する設定となっている。その際に再接続を行う(true)か行わない(false)かの設定。
+      #   useSSL                         → デフォルトはtrue。SSL接続を行う(true)か行わない(false)かの設定。同じサーバ内でDBを構築する場合はSSL接続かつコネクションプーリングを使用しない場合は接続コストが非常に高く、性能影響が大きいためfalseにする。逆にコネクションプーリングを使用するか他サーバの場合はtrueにする。
+      #   useUnicode                     → デフォルトはtrue。JavaからMySQLへ繋ぐ際の文字コードとしてUnicodeを使うことをtrueで明言する。falseでUnicodeは使わない。
+      #   characterEncoding              → デフォルトはautodetect。useUnicodeでtrueだった場合に、具体的な文字コードを定義する。utf8でUTF-8となる。
+      #   useJDBCCompliantTimezoneShift  → デフォルトはfalse。JDBCドライバ準拠のタイムゾーンシフトを使う(true)か使わない(false)かの設定。サーバとクライアントでタイムゾーンが違う場合、JDBCドライバ側のタイムゾーンシフトを使う場合true。useLegacyDatetimeCodeがfalseの場合は自動的に無効となる。
+      #   useLegacyDatetimeCode          → デフォルトはtrue。古い日時変換コードを使う(true)か使わない(false)かの設定。JDBCドライバが古い場合の下位互換性のためにレガシコードを使うか同課の設定。当プロジェクトのJDBCドライバは新しいため、基本はfalse。falseに設定すると、同じように下位互換性のためのプロパティ「useTimezone」、「useJDBCCompliantTimezoneShift」、「useGmtMillisForDatetimes」、「useFastDateParsing」が無効になる。
+      #   serverTimezone                 → サーバのタイムゾーンを指定する。日本標準時はJST（UTC+0900）、協定世界時はUTCを指定する。my.cnfにてdefault-time-zoneを指定していない場合のサーバのタイムゾーンを指定する。サーバ起動時に「The server time zone value '◇◇◇◇◇' is unrecognized or represents more than one time zone.」のエラーが出た場合は必ず指定する。
+      #   rewriteBatchedStatements       → Java側でaddBatch()からexecuteBatch()を使用したときにバッチインサートを有効(true)にするか無効(false)にするか。この項目がfalseのときにexecuteBatch()してもバッチインサートにはならない。（参考資料：https://qiita.com/hmatsu47/items/0a3b48c86abdcd2cc884）
+      # ユーザ名
+      username: dev2
+      # パスワード
+      password: bheSKiacmXP6oR
+      # ※プライマリDBの場合、イニシャライザはFlaywayで行うため、その設定（initialization-mode等）は行わない。
+    # DB個別設定（2番目） === 履歴テーブル用 ===
+    datasource2:
+      # 使うJDBCドライバ（セカンダリ） === 履歴テーブル用 ===
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      # DB接続URL
+      url: jdbc:mysql://localhost:3306/devhst2?allowPublicKeyRetrieval=true&autoReconnect=true&useSSL=false&useUnicode=true&characterEncoding=utf8&useJDBCCompliantTimezoneShift=false&useLegacyDatetimeCode=false&serverTimezone=JST&rewriteBatchedStatements=true
+      # ※設定値詳細は、datasource1を参照。
+      # ユーザ名
+      username: devhst2
+      # パスワード
+      password: bheSKiacmXP6oR
+      # デフォルトのイニシャライザを使うか否か（ALWAYS=アプリ起動時にデフォルトのイニシャライザを毎回実行、EMBEDDED=埋込DB(H2 Database)の時のみデフォルトイニシャライザを実行、NEVER=実行しない（@ConfigurationでカスタムのBean設定がある場合は、そちらを実行する））
+      initialization-mode: NEVER
+      # 下記スキーマ、データSQLスクリプトファイルのエンコード文字
+      sql-script-encoding: UTF-8
+      # イニシャライザが使用するスキーマファイルのパス（「classpath:」を先頭に付けることにより、src/main/resources配下（実jarの場合はBOOT-INF/classes配下）を示す）
+      schema: classpath:db/mysql/initializer/db2_schema.sql
+      # イニシャライザが使用するデータファイルのパス
+      data: classpath:db/mysql/initializer/db2_data.sql
+  flyway:
+    # Flywayの有効化(true)/無効化(false)（hibernateのddl-autoと同時に使わないこと！）
+    enabled: true
+    # ★重要：本番環境ではtrueにすること！ Flaywayによるcleanを行わないようにする（true=cleanを行わない、false=cleanを行う）
+    cleanDisabled: false
+    # Flywayでマイグレーションを行う対象ディレクトリ
+    locations:
+      - classpath:db/{vendor}/migration/01_base/1_init/
+      - classpath:db/{vendor}/migration/01_base/2_addkey/
+      - classpath:db/{vendor}/migration/01_base/3_insert
+      - classpath:db/{vendor}/migration/01_base/5_add_function/01_manual_sort_alter
+      - classpath:db/{vendor}/migration/01_base/5_add_function/02_manual_sort_insertupdate
+      - classpath:db/{vendor}/migration/01_base/5_add_function/03_sort_multi_alter
+      - classpath:db/{vendor}/migration/01_base/5_add_function/04_sort_multi_insertupdate
+      - classpath:db/{vendor}/migration/01_base/5_add_function/05_reprint_refill_sort_alter
+      - classpath:db/{vendor}/migration/01_base/5_add_function/06_reprint_refill_sort_insertupdate
+      - classpath:db/{vendor}/migration/01_base/5_add_function/07_rcs_entity_alter
+      - classpath:db/{vendor}/migration/01_base/5_add_function/08_rcs_entity_insertupdate
+      - classpath:db/{vendor}/migration/01_base/5_add_function/09_one_sort_n_chute_alter
+      - classpath:db/{vendor}/migration/01_base/5_add_function/10_one_sort_n_chute_insertupdate
+      - classpath:db/{vendor}/migration/01_base/5_add_function/11_chute_physics_logic_address_alter
+      - classpath:db/{vendor}/migration/01_base/5_add_function/12_chute_physics_logic_address_insertupdate
+      - classpath:db/{vendor}/migration/01_base/5_add_function/13_add_oder_unit
+      - classpath:db/{vendor}/migration/01_base/5_add_function/14_add_order_unit_insertupdate
+      - classpath:db/{vendor}/migration/01_base/5_add_function/16_db_comment_alter
+      - classpath:db/{vendor}/migration/01_base/5_add_function/17_db_comment_delete
+      - classpath:db/{vendor}/migration/01_base/5_add_function/18_mst_rcs_alter_table
+      - classpath:db/{vendor}/migration/01_base/5_add_function/19_one_sort_n_chute_insertupdate
+      - classpath:db/{vendor}/migration/01_base/5_add_function/20_full_chute_phase1_alter
+      - classpath:db/{vendor}/migration/01_base/5_add_function/21_full_chute_phase1_insertupdate
+      - classpath:db/{vendor}/migration/01_base/5_add_function/22_cust_shibusawa_insertupdate
+      - classpath:db/{vendor}/migration/01_base/5_add_function/23_batch_alter
+      - classpath:db/{vendor}/migration/01_base/5_add_function/24_batch_insertupdate
+      - classpath:db/{vendor}/migration/01_base/5_add_function/25_full_chute_phase3_alter
+      - classpath:db/{vendor}/migration/01_base/5_add_function/26_full_chute_phase3_insertupdate
+      - classpath:db/{vendor}/migration/01_base/5_add_function/27_rcs_stop_entity_alter
+      - classpath:db/{vendor}/migration/01_base/5_add_function/28_refactoring_worktype_tasktype
+      - classpath:db/{vendor}/migration/01_base/5_add_function/32_mst_gen_code_batch_data_insertupdate
+      - classpath:db/{vendor}/migration/01_base/5_add_function/33_log_menu_insertupdate
+      - classpath:db/{vendor}/migration/01_base/5_add_function/34_renew_wes_ui_alter
+      - classpath:db/{vendor}/migration/01_base/5_add_function/35_renew_wes_ui_insertupdate
+      - classpath:db/{vendor}/migration/01_base/5_add_function/36_renew_scan_alter
+      - classpath:db/{vendor}/migration/01_base/5_add_function/37_renew_scan_insertupdate
+      - classpath:db/{vendor}/migration/01_base/5_add_function/38_rcs_mac_address_alter
+      - classpath:db/{vendor}/migration/01_base/5_add_function/39_batch_ending_flag_alter
+      - classpath:db/{vendor}/migration/01_base/5_add_function/40_batch_ending_flag_insertupdate
+      - classpath:db/{vendor}/migration/01_base/5_add_function/41_scan_tasktype_item_setting
+      - classpath:db/{vendor}/migration/01_base/5_add_function/42_batch_no_length_alter
+      - classpath:db/{vendor}/migration/01_base/5_add_function/43_batch_update_column_order_alter
+      - classpath:db/{vendor}/migration/01_base/5_add_function/44_gen_code_item_order_alter
+      - classpath:db/{vendor}/migration/01_base/5_add_function/45_gen_code_item_order_insertupdate
+      - classpath:db/{vendor}/migration/01_base/5_add_function/46_sorting_key1_update
+      - classpath:db/{vendor}/migration/01_base/5_add_function/47_task_type_setting_menu_insertupdate
+      - classpath:db/{vendor}/migration/01_base/7_add_function_amr/01_amr_data_insert
+      - classpath:db/{vendor}/migration/01_base/7_add_function_amr/02_amr_ui_renewal_insertupdate
+      - classpath:db/{vendor}/migration/01_base/7_add_function_amr/03_amr_phase2_data_insert
+      - classpath:db/{vendor}/migration/01_base/7_add_function_amr/04_area_zone_entity_insertupdate
+    # マスタあり（マスタレスOFF）では以下4_masterexistのコメントアウトを外す ---
+    # （逆にマスタレスでは以下はコメント化する）
+    #    - classpath:db/{vendor}/migration/01_base/4_masterexist
+    # --------------------------------------------------------------------------
+
+    # DBの初期値として使用する＆Flyway内のSQLで使用する環境変数
+    placeholders:
+      # データベース名（プライマリDB）
+      db-name: dev2
+      # データベース名（セカンダリの履歴DB）
+      db2-name: devhst2
+      # 設定マスタの初期値
+      setting:
+        # 設定番号
+        setting-no: 1
+        # WMS名
+        wms-name: WMS (CSVファイル)
+        # 中間システム名
+        is-name: +hub
+        # 連続投入回数
+        continuous-entry-times: 5
+        # 分析画面更新秒数
+        ana-scm-upd-seconds: 5
+        # グリッドXサイズ
+        gridx-size: 30
+        # グリッドYサイズ
+        gridy-size: 30
+        # 仕分けプランモード状態
+        sort-plan-mode-state: 0
+        # ARセンサー使用可否（0:使用しない 1:使用する）
+        ar-sensor-use: 0
+        # 箱回収ロボットが使用可否	(0:使用しない 1:使用する)
+        box-collection-robot-use: 0
+      # CSV番号（マッピング番号）一覧
+      csvno:
+        # 商品マスタCSV
+        item: item
+        # シュートマスタCSV
+        chute: chute
+        # 店舗マスタCSV
+        shop: shop
+        # 作業指示データCSV
+        task: task
+        # CSV実績ファイル
+        result: result
+        # デバイスマスタCSV
+        device: device
+        # 仕分けマスタCSV
+        sorting: sorting
+        # AMR-ロケーションマスタ
+        location: location
+        # AMR-ポジションマスタ
+        position: position
+        # AMR管理
+        amr: amr
+        # コンテナマスタ
+        container: container
+        # コンテナ配置マスタ
+        placement: placement
+        # ラックマスタCSV
+        rack: rack
+        # タスクタイプ設定マスタ
+        task-type-setting: task-type-setting
+        # タスクタイプマスタ
+        task-type: task-type
+      # インポート/エクスポートのマッピング番号一覧
+      ie-mapping-no:
+        # 商品マスタ
+        ie-item: ie-item
+        # シュートマスタ
+        ie-chute: ie-chute
+        # 店舗マスタ
+        ie-shop: ie-shop
+        # バッチ
+        ie-batch: ie-batch
+        # タスク
+        ie-task: ie-task
+        # タスク履歴
+        ie-taskhst: ie-taskhst
+        # 箱回収
+        ie-box-picker: ie-box-picker
+        # デバイスマスタ
+        ie-device: ie-device
+        # デバイス明細マスタ
+        ie-detail-device: ie-detail-device
+        # インダクションマスタ
+        ie-induction: ie-induction
+        # 仕分けマスタ
+        ie-sorting: ie-sorting
+        # ラックマスタ
+        ie-rack: ie-rack
+        #ログ
+        ie-log: ie-log
+        # AMR-ロケーションマスタ
+        ie-location: ie-location
+        # AMR-ポジションマスタ
+        ie-position: ie-position
+        # AMR管理
+        ie-amr: ie-amr
+        # コンテナマスタ
+        ie-container: ie-container
+        # コンテナ配置マスタ
+        ie-placement: ie-placement
+        # AMRタスクマスタ
+        ie-amrtask: ie-amrtask
+        # タスクタイプ設定マスタ
+        ie-task-type-setting: ie-task-type-setting
+        # タスクタイプマスタ
+        ie-task-type: ie-task-type
+        # エリアマスタ
+        ie-area: ie-area
+        # ゾーンマスタ
+        ie-zone: ie-zone
+      # カウンタマスタの設定
+      counter:
+        # タスクNoカウンタ
+        task-no: task-no
+  # JPA個別設定
+  jpa:
+    # エンティティの遅延読み込み有効化(true)/無効化(false)
+    open-in-view: true
+    # Hibernate設定
+    hibernate:
+      # EntityからDDLを自動発行できる機能（flywayと同時に使用しないこと！）
+      ddl-auto: none
+      # ネーミングストラテジ（JPAでmstItem→mst_itemのようにキャメルケースからスネークケースへ変換して、DBで使うためのネーミングストラテジ設定）
+      # ※データソースを複数分けるために独自で定義した場合、恐らく下記は自動では使われないが、独自のconfigクラスにて下記を使うようにしてあるため定義しておく。
+      naming:
+        # 暗黙的ネーミングストラテジ：ImplicitNamingStrategyは、エンティティで明示的にテーブル名や列名を付けていない場合に使用されるストラテジ
+        implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
+        # 物理的ネーミングストラテジ：PhysicalNamingStrategyは、エンティティに明示的に指定したテーブル名や列名に対して使用されるストラテジ
+        physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
+    # プロパティ設定
+    properties:
+      # バッチインサートを有効にする
+      hibernate.order_inserts: true
+      # バッチアップデートを有効にする
+      hibernate.order_updates: true
+      # バッチの数
+      hibernate.jdbc.batch_size: 30
+      # Hibernateプロパティ設定
+      hibernate:
+        # コンソールにSQLを表示する設定（ログファイルには出力されない）
+        # Hibernateで発行されたSQLをログで表示する(true)/しない(false)
+        show_sql: false
+        # Hibernateで発行されたSQLを整形して表示する(true)/しない(false)
+        format_sql: true
+  # Spring Data RESTの設定
+  data.rest:
+    # Spring Data RESTのベースパス
+    base-path: /admin
+  # Jacson（JSONパーサ）の設定
+  jackson:
+    # デフォルトタイムゾーン
+    time-zone: Asia/Tokyo
+  # 開発ツール設定
+  devtools:
+    # 自動再起動設定
+    restart:
+      # 有効/無効（trueで有効、falseで無効）
+      enabled: true
+  #MQ設定
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+    virtual-host: /
+    listener:
+      simple:
+        concurrency: 2
+        prefetch: 1
+        retry.max-attempts: 5 # 最大リトライ回数
+        acknowledge-mode: manual
+# Mybatisの設定
+mybatis:
+  # Mybatisの実行モード
+  executor-type: BATCH
+  # Mybatis設定
+  configuration:
+    # 遅延ロードの有効化(true)/無効化(false)
+    lazy-loading-enabled: false
+    # 複数結果セット有効化(true)/無効化(false)。複数のResultSetを返すことを許可するか禁止するか
+    multiple-result-sets-enabled: true
+    # 自動マッピング動作
+    auto-mapping-behavior: FULL
+    # アンダースコアからキャメルケースへのマップ。自動マッピングの際にDB側のアンダースコアをPOJO側ではローワキャメルケースにする
+    map-underscore-to-camel-case: true
+    # 不明列の動作自動マッピング。自動マッピング対象のプロパティが存在しないカラムを検知したときの動作
+    auto-mapping-unknown-column-behavior: WARNING
+    # 空行インスタンスの返却設定。デフォルトの動作（false）では、取得した列がすべてNULLだった場合、nullを返すが、trueにすると空のインスタンスを返すようになる
+    return-instance-for-empty-row: true
+# ●ログ個別設定
+logging:
+  # ログファイル設定
+  file:
+    # ログの最大保持ファイル数
+    max-history: 14
+    # サーバ起動時に過去のファイルを削除する（true）、しない（false）。通常ログローテート時に削除が走るが、ローテート時に起動しているとは限らないので、このオプションをtrueにすれば確実に過去のファイルを削除できる
+    clean-history-on-start: true
+  # ロギングレベル
+  level:
+    # 全体のログレベル
+    root: info
+    # SpringFrameworkのログレベル
+    org.springframework.web: debug
+    # リクエストパラメータ
+    org.springframework.web.servlet.DispatcherServle: debug
+    # SpringFramworkのデータソース、トランザクションマネージャのログレベル
+    org.springframework.jdbc: debug
+    # Spring Bean登録一覧のログレベル（trace以下で表示される）
+    org.springframework.context.annotation.ConfigurationClassBeanDefinitionReader: info
+    # Spring Bean作成ログのログレベル（trace以下で表示される）
+    org.springframework.beans.factory.support.DefaultListableBeanFactory: info
+    # Hibernate全体のログレベル
+    org.hibernate: info
+    # Hibernateで発行されたSQLのログレベル（debug以下で表示される）
+    org.hibernate.SQL: debug
+    # Hibernateで発行されたSQLのパラメータログレベル（trace以下で表示される）
+    org.hibernate.type.descriptor.sql.BasicBinder: trace
+    # Hibernate起動時の型情報
+    org.hibernate.type: info
+    # Hibernateのドライバ情報やバッチインサート/デリート時のSQL情報（debug以下で表示される）
+    org.hibernate.engine.jdbc: debug
+    # Hibernateの抽象エンティティ永続化クラスのログ（WARN以下にするとタスクエンティティの商品マスタ、店舗マスタの内容を読み取り専用でも変更するとWARNが出る（変更できないにおに変更しようとしているよ、という警告）ため、抑制としてerror以上とする）
+    org.hibernate.persister.entity.AbstractEntityPersister: error
+    # Flywayのログレベル
+    org.flywaydb: info
+    # 自動マッピング対象のプロパティが存在しないときのログ（map-underscore-to-camel-caseがtrueになっているときのみ）※この項目はwarn以下にしないと表示されない
+    org.apache.ibatis.session.AutoMappingUnknownColumnBehavior: warn
+    # Nettyのログ
+    io.netty: debug
+    # Springfoxの型推測のログ（WARN以下にすると推測WARNが出るため、抑制としてerror以上とする）
+    springfox.documentation.spring.web.readers.parameter: error
+    # 自パッケージのログレベル
+    com.plus_automation: trace
+    # 自パッケージのインバウンドサーバハンドラのログレベル（traceにすると定期処理で大量にログが出るため個別に設定する）
+    com.plus_automation.io.inbound: trace
+    # 自パッケージのアウトバウンドクライアントハンドラのログレベル（traceにすると定期処理で大量にログが出るため個別に設定する）
+    com.plus_automation.io.outbound: trace
+# Spring Boot Actuatorの設定
+management:
+  # エンドポイントの設定
+  endpoints.web.exposure.include: "*"
+  # /healthで表示される情報
+  endpoint.health.show-details: ALWAYS
+  # シャットダウンを有効/無効にする
+  endpoint.shutdown.enabled: true
+
+# ●独自設定 ============================================================================================
+# Spring Boot WES独自設定
+springboot:
+  # APIサーバの再起動設定（true:APIリクエストで再起動できるようにする、false:APIリクエストで再起動できないようにする）
+  can-restarted: true
+  # APIサーバの再起動にGETリクエストも使えるようにする（true:GETで再起動できるようにする、false:GETで再起動できないようにする）
+  can-get-restarted: true
+  # GETリクエストのバリデーション（true:行う、false:行わない） ※GETリクエストは画面の検索系のため通常はfalseで良い。
+  get-validator: false
+  # セキュリティ設定
+  security:
+    # 予期せぬ例外が発生したときに、発生時刻以外に例外内容を出すかどうか（FULL：例外をすべて出力、PARTIAL：一部だけ内容を出力、NONE：出力しない） ※詳細なエラーメッセージをリクエスト元に知らせたくない場合はNONEにする
+    unexpected-err-msg: FULL
+  # cronスケジュール設定。秒/分/時/日/月/曜日（0:日、1:月、2:火、3:水、4:木、5:金、6:土、7:日）でスケジュールを指定する。
+  cron:
+    # タスク履歴退避スケジュール
+    task-history-backup-schedule: 0 15 0 * * *
+    # タスク実績ファイル自動出力スケジュール
+    task-result-file-auto-output-schedule: 0 0 * * * *
+    # タスク実績ファイル削除スケジュール
+    task-result-file-remove-schedule: 0 15 1 * * 0
+    # TrLogテーブルの以前のデータを削除するスケジュール
+    log-records-deleting-schedule: 0 20 0 * * *
+    # TrTaskHstテーブルの以前のデータを削除するスケジュール
+    task-hst-records-deleting-schedule: 0 30 0 * * *
+    # amrモニターロボットスケジュール
+    amr-monitor-robot-schedule: 0/3 * * * * ?
+# 履歴退避設定
+task-history:
+  # バッチに紐づいているタスクがない場合、バッチを削除する（特に理由がない限りtrue）
+  batch-associated-task-if-batch-are-you-sure-that-delete: true
+  # TrTaskHstテーブルのデータを削除する前の日数
+  task-hst-records-deleting-target-day: 14
+  # 滞留しているタスクがあった場合に、タスクテーブルの更新日時がn日前であれば強制的に「終了」ステータスに置き換える
+  # true：タスクステータスを[終了]に更新します
+  # false：タスクステータスを[終了]に更新しません
+  update-stagnant-task-status-to-finish: true
+  # 停滞したタスクのステータスを維持する日数
+  stagnant-task-status-keep-target-day: 7
+# CSV入力/CSV出力の独自設定【アップロードによる取り込み/手動・自動実績出力専用】
+csv:
+  # ※エンコード指定の注意。Windows標準の文字コードはsjisではなく、MS932。sjisにした場合、機種依存文字（①など）が表示されないため注意。
+  # 読み込みCSVエンコード（UTF-8,MS932,ASCII,EUC-JP）
+  input-encode: MS932
+  # 書き込みCSVエンコード（UTF-8,MS932,ASCII,EUC-JP）
+  output-encode: MS932
+  # 書き込みCSV改行コード（AUTO：サーバの起動環境により自動で判断、CRLF：CR+LF（Windows系で使われる）、CR：CR、LF：LF（Unix系で使われる））
+  output-line-separator: CRLF
+  # 【手動出力】書き込みCSVファイルのファイル名フォーマット
+  # 【概要】
+  #   実績CSVファイルのファイル名を定義する。
+  #   絶対パス、相対パスで指定可能。存在しないフォルダが指定された場合は、フォルダを新たに生成する。
+  #   相対パスの場合は、実行jarの配下から始まる。
+  # 【説明】
+  #   プレースホルダを文字列中に入れ込むことにより、任意の文字列に置換できる。
+  #   例）result/${DATE1}/${PREFIX}_${BATCH_NO}_${DATE2}.csv → result/190102/RESULT_BAT001_20190102_030405
+  #      ※書き込みCSVファイルのファイル名日付フォーマットは以下の設定とする。
+  #        output-file-name-date-format:
+  #          DATE1: yyMMdd
+  #          DATE2: yyyyMMdd_HHmmss
+  # 【プレースホルダ】
+  #   ${PREFIX}：ファイル名プレフィックスが設定される。
+  #   ${BATCH_NO}：バッチ番号が設定される。
+  #   ${xxx}：日付が設定される。「xxx」部分には「出力ファイル名日付フォーマット」で設定したプレースホルダ（囲み文字無し）に${}で囲んだものを使用する。
+  # ★テストプロパティの場合はMaven crean buildのたびに消えるtarget配下を勧める。
+  manual-output-file-name-format: result/manual/${PREFIX}_${BATCH_NO}_${DATE1}.csv
+  # 【自動出力】書き込みCSVファイルのファイル名フォーマット（詳細は「【手動出力】書き込みCSVファイルのファイル名フォーマット」を参照）
+  # ★テストプロパティの場合はMaven crean buildのたびに消えるtarget配下を勧める。
+  auto-output-file-name-format: result/auto/${PREFIX}_${BATCH_NO}_${DATE2}.csv
+  # 書き込みCSVファイルのファイル名日付フォーマット
+  # 例）「2019年1月2日 3時4分5秒6ミリ秒」を例にします。
+  # DATE: yyyyMMdd_HHmmss_SSS -> 20190102_030405_006
+  # DATE: yyMd_Hms_S -> 1912_345_6（一桁系は0埋めしなくなる。また、年の場合は2桁「yy」までとなる）
+  # 複数指定可能で、「プレースホルダ（囲み文字無し）: 日付フォーマット」の書式で記述する。プレースホルダ囲み文字無しは、上記のファイル名フォーマットで使用しているものは使えないため注意。
+  output-file-name-date-format:
+    DATE1: yyyyMMdd_HHmmss_SSS
+    DATE2: yyyyMMdd_HHmmss
+  # 書き込みCSVファイルのファイル名日付タイムゾーン
+  output-file-name-date-time-zone: Asia/Tokyo
+  # 出力ファイルオープンオプション
+  # 【オプション一覧】
+  # READ：読取アクセスとしてファイルを開く（使用しない）。
+  # WRITE：書込アクセスとしてファイルを開く。
+  # APPEND：書き込む際にファイルの最後に新しいデータを追記する。このオプションは、WRITEオプションまたはCREATEオプションとともに使用する。
+  # TRUNCATE_EXISTING：開く際にファイルを空（0バイト）にする。 このオプションは、WRITEオプションとともに使用する。
+  # CREATE：開く際にファイルが存在する場合はそのファイルを開く。存在しない場合はファイルを新たに作成する。
+  # CREATE_CREATE_NEW：開く際にファイルが存在する場合はエラーを起こす。存在しない場合はファイルを新たに作成する。
+  # DELETE_ON_CLOSE：ファイルをすべて書き込んだあとにそのファイルを削除する。
+  # SPARSE：新しいファイルを作成する際に、スパース・ファイルとして作成する。データに空白の部分がある（スパース）大きなファイルを保存する際に、この空白部分にディスク領域を割り当てないことで効率的に保存できる、NTFSなどの一部のファイル・システムで使用することができる。
+  # SYNC：ファイル（内容とメタデータの両方）と、基盤となるストレージ・デバイスとの同期を維持する。
+  # DSYNC：ファイルの内容と、基盤となるストレージ・デバイスとの同期を維持する。
+  output-open-option:
+    - WRITE
+    - APPEND
+    - CREATE
+  # 手動実績ファイル削除：手動実績ファイルはダウンロードが終わったら削除する（true:削除する、false:削除しない）
+  manual-output-file-deleting: true
+  # 過去の手動実績ファイル削除（true:古い手動実績ファイルを削除する、false:古い手動実績ファイルを削除しない）
+  past-manual-output-file-deleting: true
+  # 過去の自動実績ファイル削除（true:古い自動実績ファイルを削除する、false:古い自動実績ファイルを削除しない）
+  past-auto-output-file-deleting: true
+  # 過去の実績ファイル削除対象日付：古い実績ファイル削除機能による削除対象の過去日を設定する（例：2とすると、2日以前の実績ファイルを削除する。正確には現在時刻から2日前を削除する。現在時刻=2020年2月3日 4時5分6秒の場合、削除対象日付を「2」とすると2020年2月1日 4時5分6秒より前のファイルが削除対象になる）
+  past-output-file-deleting-target-day: 14
+  # 削除対象ファイル名サフィックス：拡張子などを指定し、実績ファイルの格納されたフォルダをすべて削除しないようにする。
+  deleting-target-filename-suffix: .csv
+  # アップロード前に該当テーブルを全削除する
+  clean-table-before-upload: false
+  # 重複レコードの動作モード
+  # REREGISTRATION：再登録モード。重複レコードが存在した場合、そのレコードの登録日時と更新日時を現在時刻に更新してUPDATEを行う。DBアクセス頻度：低(アップロード時間：早い)。
+  # OVERWRITING：上書きモード。重複レコードが存在した場合、そのレコードの登録日時はDB側の重複レコードのままで、更新日時だけを現在時刻に更新しUPDATEを行う。DBアクセス頻度：高(アップロード時間：遅い)。
+  # ERROR：エラーモード。重複レコードが存在した場合、エラー扱いにして現在のトランザクションをロールバックする。DBアクセス頻度：中(アップロード時間：そこそこ早い)。
+  duplicate-records-operation-mode: ERROR
+  # シュートNo手動割付（true:手動割付する、false:自動割付する）
+  assign-chute-no-manual: true
+  # マスタレスモード（true:マスタ無し、false:マスタ有り）※masterless-mode:trueかつassign-chute-no-manual:falseの組合せは運用上発生しないので、左記組合せでは設定しないようにする。
+  masterless-mode: true
+  # タスク分割設定（true:タッチ単位分割する、false:分割しない）
+  masterless-task-devided: true
+  # タスク分割（タッチ単位）デフォルト値
+  masterless-task-devided-size: 1
+# テーブルインポート/エクスポート独自設定【テーブルインポート/エクスポート専用】
+table-ie:
+  # ※エンコード指定の注意。Windows標準の文字コードはsjisではなく、MS932。sjisにした場合、機種依存文字（①など）が表示されないため注意。
+  # インポートファイルエンコード（UTF-8,MS932,ASCII,EUC-JP）
+  import-file-encode: MS932
+  # エクスポートファイルエンコード（UTF-8,MS932,ASCII,EUC-JP）
+  export-file-encode: MS932
+  # エクスポートファイル改行コード（AUTO：サーバの起動環境により自動で判断、CRLF：CR+LF（Windows系で使われる）、CR：CR、LF：LF（Unix系で使われる））
+  export-file-line-separator: CRLF
+  # エクスポートファイルのファイル名フォーマット
+  # 【概要】
+  #   実績CSVファイルのファイル名を定義する。
+  #   絶対パス、相対パスで指定可能。存在しないフォルダが指定された場合は、フォルダを新たに生成する。
+  #   相対パスの場合は、実行jarの配下から始まる。
+  # 【説明】
+  #   プレースホルダを文字列中に入れ込むことにより、任意の文字列に置換できる。
+  #   例）result/${DATE1}/${PREFIX}_${BATCH_NO}_${DATE2}.csv → result/190102/RESULT_BAT001_20190102_030405
+  #      ※書き込みCSVファイルのファイル名日付フォーマットは以下の設定とする。
+  #        output-file-name-date-format:
+  #          DATE1: yyMMdd
+  #          DATE2: yyyyMMdd_HHmmss
+  # 【プレースホルダ】
+  #   ${PREFIX}：ファイル名プレフィックスが設定される。
+  #   ${xxx}：日付が設定される。「xxx」部分には「出力ファイル名日付フォーマット」で設定したプレースホルダ（囲み文字無し）に${}で囲んだものを使用する。
+  # ★テストプロパティの場合はMaven crean buildのたびに消えるtarget配下を勧める。
+  export-file-name-format: ${PREFIX}_${DATE}.csv
+  # エクスポートファイルのファイル名日付フォーマット
+  # 例）「2019年1月2日 3時4分5秒6ミリ秒」を例にします。
+  # DATE: yyyyMMdd_HHmmss_SSS -> 20190102_030405_006
+  # DATE: yyMd_Hms_S -> 1912_345_6（一桁系は0埋めしなくなる。また、年の場合は2桁「yy」までとなる）
+  # 複数指定可能で、「プレースホルダ（囲み文字無し）: 日付フォーマット」の書式で記述する。プレースホルダ囲み文字無しは、上記のファイル名フォーマットで使用しているものは使えないため注意。
+  export-file-name-date-format:
+    DATE: yyyyMMdd_HHmmss
+  # エクスポートファイルのファイル名日付タイムゾーン
+  export-file-name-date-time-zone: Asia/Tokyo
+  # インポート前に該当テーブルを全削除する（true：する、false：しない）
+  clean-table-before-import: true
+  # 重複レコードの動作モード
+  # REREGISTRATION：再登録モード。重複レコードが存在した場合、そのレコードの登録日時と更新日時を現在時刻に更新してUPDATEを行う。DBアクセス頻度：低(アップロード時間：早い)。
+  # OVERWRITING：上書きモード。重複レコードが存在した場合、そのレコードの登録日時はDB側の重複レコードのままで、更新日時だけを現在時刻に更新しUPDATEを行う。DBアクセス頻度：高(アップロード時間：遅い)。
+  # ERROR：エラーモード。重複レコードが存在した場合、エラー扱いにして現在のトランザクションをロールバックする。DBアクセス頻度：中(アップロード時間：そこそこ早い)。
+  duplicate-records-operation-mode: ERROR
+  # DBへ登録数
+  insert-quantity: 2000
+  # エラーCSV出力パス
+  export-error-csv-path: error/
+# [obsolete-廃止]プリンタの独自設定
+printer:
+  # 印刷日時フォーマット
+  printing-date-format: yy/MM/dd HH:mm
+  # 印刷日時タイムゾーン
+  printing-date-time-zone: Asia/Tokyo
+# インバウンドサーバ/アウトバウンドクライアントの独自設定
+io:
+  # 中間システムのシステム名（英数字10桁まで）：WCSへ送信するメッセージのSourceに設定される
+  systemname: WES
+  # RCSサーバ (中間システム -> RCSサーバ) 設定
+  rcs-server:
+    # RCSへ通知する際に使用するRCSマスタのRCS Noを指定する
+    rcs-nos:
+      - 1
+    # [obsolete-廃止]IPアドレス（ポート含む)：現在使用していない項目。将来的に削除予定
+    ip-address: localhost:8511
+    # API 発進通知。
+    api-start-notification: /api/start-notification
+    # API シュートステータス通知。
+    api-chute-status: /api/chute-status
+    # RCSへのステータス通知有無（true：通知する、false：通知しない）
+    chute-status-notification: true
+# 機器（ロボット）設定
+equipment-setting:
+  # 傾き設定元
+  # default：デフォルト値（マスタレスの時は必ずdefaultを指定する）
+  # mst-item-table：商品マスタテーブル
+  tile-angle-setting-source: default
+  # デフォルト値：傾き設定元がデフォルト値指定の場合に使用する傾きの固定値。もしくは指定しなかった場合のデフォルト値。
+  default-tile-angle: 60
+# 商品スキャン設定
+item-scan-setting:
+  # スキャンモード
+  # scan-code-mode : スキャンしたコードに該当するシュートをタスクテーブルから探すスキャンモード。
+  # tc-mode : TC型用。スキャンしたコードに該当するシュートを店舗テーブルから探すスキャンモード。
+  scan-mode: scan-code-mode
+  # TCモードのタスクタイプ
+  tc-task-type: 0
+  # Item Code切り出しルールリスト
+  rules:
+    # ルールキー：このキーに該当するルールを使って、Item Codeを切り出す
+    # default:デフォルト切り出しルール
+    - rule-key: default
+      # 切り出し開始位置（0始まり。1桁目を「0」として数える。例えば、3桁目を開始としたい場合は、「2」とする）
+      cutout-start-pos: 0
+      # 切り出し長さ（上記開始位置から切り出すのか文字列の長さ。例えば、5とすると開始位置から5文字分切り出す） ※「0」とすると何も行わない
+      cutout-len: 0
+      # 0埋めルール（NONE：0埋めしない、LEFT：0埋め最大桁数を左に0埋め、RIGHT：0埋め最大桁数を右に0埋め）
+      zero-padding-rule: NONE
+      # 0埋め最大桁数数
+      zero-padding-max-digit-num: 0
+# [obsolete-廃止]スキャンコード設定
+scan-code-setting:
+  # チェックディジット補正有無（true：補正する、false：補正しない） ※「補正する」とは、デコードしたスキャンコードが13桁か8桁の場合に、元々のチェックディジットと計算したチェックディジットが違う場合、計算したチェックディジットを使うこと。
+  check-digit-correction: true
+  # Item Code複数存在処理フラグ（true：Item Codeが複数存在していても処理を行う、false：複数存在した場合エラーを起こさせる） ※通常スキャンコードはItem Codeリストに一つのみだが、複数同じスキャンコードが存在していても処理をおこなうフラグ。
+  item-code-multiple-existed-if-process: true
+# RFIDデコード設定
+rfid-decode-setting:
+  # 変換ルール
+  # hex-to-bin-to-dec：RFID指定位置切り出し変換（16進数RFID→2進数RFID→指定桁数切り出し→切り出した2進数を10進数へ変換）
+  # hex-to-bin-to-bcd：RFID指定位置切り出し変換（16進数RFID→2進数RFID→指定桁数切り出し→切り出した2進数を2進化10進数へ変換）
+  # sgtin-96：SGTIN-96ビット変換（EPC Tag Data Standard（EPCデータ識別標準仕様）に基づいた変換）
+  converting-rule: hex-to-bin-to-dec
+  # チェックディジット補正有無（true：補正する、false：補正しない） ※「補正する」とは、デコードしたスキャンコードが13桁か8桁の場合に、元々のチェックディジットと計算したチェックディジットが違う場合、計算したチェックディジットを使うこと。
+  check-digit-correction: true
+  # スキャンコード体系参考URL：https://www.dsri.jp/jan/about_jan.html
+  # 上記には掲載していないが、スキャンコードの最初の文字が「20～29」の場合は、インストアコードと言い、後の数字は好きに割り当てることができる。
+  # RFIDデコードルールリスト
+  rules:
+    # ルール名（分かりやすい名前を付ける。スキャンコードとして抽出するコード名などが分かりやすい。例えば、国コード、メーカコード、商品コードなど）
+    - rule-name: 国コード＋メーカコード
+      # 2進数RFIDの切り出し開始位置（0始まり。1桁目を「0」として数える。例えば、3桁目を開始としたい場合は、「2」とする）
+      bin-rfid-cutout-start-pos: 14
+      # 2進数RFIDの切り出し長さ（上記開始位置から切り出すのか文字列の長さ。例えば、5とすると開始位置から5文字分切り出す） ※「0」とすると何も行わない
+      bin-rfid-cutout-len: 24
+      # 0埋めルール（NONE：0埋めしない、LEFT：0埋め最大桁数を左に0埋め、RIGHT：0埋め最大桁数を右に0埋め）
+      zero-padding-rule: NONE
+      # 0埋め最大桁数数
+      zero-padding-max-digit-num: 7
+
+      # ルール名（分かりやすい名前を付ける。スキャンコードとして抽出するコード名などが分かりやすい。例えば、国コード、メーカコード、商品コードなど）
+    - rule-name: 商品コード
+      # 2進数RFIDの切り出し開始位置（0始まり。1桁目を「0」として数える。例えば、3桁目を開始としたい場合は、「2」とする）
+      bin-rfid-cutout-start-pos: 38
+      # 2進数RFIDの切り出し長さ（上記開始位置から切り出すのか文字列の長さ。例えば、5とすると開始位置から5文字分切り出す） ※「0」とすると何も行わない
+      bin-rfid-cutout-len: 20
+      # 0埋めルール（NONE：0埋めしない、LEFT：0埋め最大桁数を左に0埋め、RIGHT：0埋め最大桁数を右に0埋め）
+      zero-padding-rule: LEFT
+      # 0埋め最大桁数数
+      zero-padding-max-digit-num: 5
+# 仕分けプラン設定
+sort-plan-setting:
+  # 仕分けプラン発送キー名
+  sort-plan-send-key-name: 発送
+  # 仕分けプラン到着キー名
+  sort-plan-arrival-key-name: 到着
+  # バッチ番号フォーマット
+  # 【概要】
+  #   バッチ番号のフォーマットを定義する。
+  # 【説明】
+  #   プレースホルダを文字列中に入れ込むことにより、任意の文字列に置換できる。
+  #   例）${SORT_PLAN_KEY}_${DATE} → 発送_2020051315
+  #      ※バッチ番号内の日付フォーマットは以下の設定とする。
+  #        batch-no-date-format:
+  #          DATE: yyyyMMddHH
+  # 【プレースホルダ】
+  #   ${SORT_PLAN_KEY}：仕分けプランキー名が設定される。
+  #   ${xxx}：日付が設定される。「xxx」部分には「バッチ番号内の日付フォーマット」で設定したプレースホルダ（囲み文字無し）に${}で囲んだものを使用する。
+  batch-no-format: ${SORT_PLAN_KEY}_${DATE}
+  # バッチ番号内の日付フォーマット
+  # 例）「2019年1月2日 3時4分5秒6ミリ秒」を例にします。
+  # DATE: yyyyMMdd_HHmmss_SSS -> 20190102_030405_006
+  # DATE: yyMd_Hms_S -> 1912_345_6（一桁系は0埋めしなくなる。また、年の場合は2桁「yy」までとなる）
+  # 複数指定可能で、「プレースホルダ（囲み文字無し）: 日付フォーマット」の書式で記述する。プレースホルダ囲み文字無しは、上記のファイル名フォーマットで使用しているものは使えないため注意。
+  batch-no-date-format:
+    DATE: yyyyMMddHH
+  # バッチ番号内の日付タイムゾーン
+  batch-no-date-time-zone: Asia/Tokyo
+# バッチ管理画面設定
+batch-setting:
+  # 一時保留ボタン表示 (show:表示する hidden:表示しない）バッチ管理画面の一時保留ボタンの表示設定を行う。
+  show-temporary-holding: show
+  # 終了ボタンを押してから終了処理中もスキャンを行えないようにするために、バッチ終了した際にバッチテーブルの「終了後フラグ」をONに設定するか否かの設定。
+  # true: バッチ終了時に「バッチ終了後フラグ」をONにする。
+  # false: 「バッチ終了後フラグ」の管理を行わない。バッチ終了時にONにしない。
+  enable-batch-ending-flag-setting: true
+  # スキャンしてからロボットが商品を運び終えるまでに、終了ボタンを押せないようにする設定。
+  # true: 終了ボタンを押した際に、タスクテーブルのステータスに「処理中」のタスクがある場合、終了させないようにする。
+  # false: 終了ボタンを押した際に、タスクテーブルのステータスチェックを行わない。
+  check-processing-task-when-ending-batch: true
+# カウンタマスタ設定値
+counter-setting:
+  # デバイスID
+  device-id:
+    # デバイスのタイプ(デバイスマスタのタイプと同じものを使用)
+    - device-type: 0
+      # キーのプレフィックス(key_nameに使用。"DEVICE_ID"＋key-prefixでkey_nameとする)
+      key-prefix: HT
+      # カウンタ名
+      counter-name: デバイスID_HT
+      # 最大値
+      max-value: 99999999999
+      # デバイスのタイプ(デバイスマスタのタイプと同じものを使用)
+    - device-type: 1
+      # キーのプレフィックス(key_nameに使用。"DEVICE_ID"＋key-prefixでkey_nameとする)
+      key-prefix: P
+      # カウンタ名
+      counter-name: デバイスID_プリンタ
+      # 最大値
+      max-value: 99999999999
+  # 箱番号
+  box-no:
+    # 採番後フォーマット
+    # 【概要】
+    #   採番後箱番号のフォーマットを定義する。
+    # 【説明】
+    #   プレースホルダを文字列中に入れ込むことにより、任意の文字列に置換できる。
+    #   例）${DATE}${COUNTER} → 2005130000001
+    #     ※箱番号内の日付フォーマットは以下の設定とする。
+    #        date-format:
+    #          DATE: yyMMdd
+    # 【プレースホルダ】
+    #   ${COUNTER}：採番した番号が設定される。
+    #   ${xxx}：日付が設定される。「xxx」部分には「採番後箱番号内の日付フォーマット」で設定したプレースホルダ（囲み文字無し）に${}で囲んだものを使用する。
+    string-format: ${DATE}${COUNTER}
+    # キーのプレフィックス
+    key-prefix: box-no
+    # カウンタ名
+    counter-name: 箱番号
+    # 最大値
+    max-value: 999999
+    # 日付形式
+    date-format:
+      # 採番後の文字列の日付
+      # 例）「2019年1月2日 3時4分5秒6ミリ秒」を例にします。
+      # DATE: yyyyMMdd_HHmmss_SSS -> 20190102_030405_006
+      # DATE: yyMd_Hms_S -> 1912_345_6（一桁系は0埋めしなくなる。また、年の場合は2桁「yy」までとなる）
+      # 複数指定可能で、「プレースホルダ（囲み文字無し）: 日付フォーマット」の書式で記述する。プレースホルダ囲み文字無しは、上記のファイル名フォーマットで使用しているものは使えないため注意。
+      DATE: yyMMdd
+      # カウンタマスタのキーを取得するためのke-prefix+KEY_SUFFIXのために使う日付。変更しないこと。
+      KEY_SUFFIX: yyMMdd
+    # 日付タイムゾーン
+    date-time-zone: Asia/Tokyo
+    # ON:箱ID採番あり / OFF:箱ID採番なし　※即時に仕分け実績計上したい場合はONとする
+    # デフォルトFalse
+    create-task-numbering: false
+  # WES No
+  wes-no:
+    # キー名
+    key-name: wes-no
+    # カウンタ名
+    counter-name: WES_No
+    # 最大値
+    max-value: 999999999999999999
+  # 外部連携No1
+  foreign-link-no1:
+    # キー名
+    key-name: foreign-link-no1
+    # カウンタ名
+    counter-name: 外部連携No1
+    # 最大値
+    max-value: 999999999999999999
+    # AMRタスク番号
+  amr-task-no:
+    # 採番後フォーマット
+    # 【概要】
+    #   AMRタスク番号のフォーマットを定義する。
+    # 【説明】
+    #   プレースホルダを文字列中に入れ込むことにより、任意の文字列に置換できる。
+    #   例）${AMR}${TYPE}${DATE}${COUNTER} → AMR01202012221231300000000000001
+    #     ※日付フォーマットは以下の設定とする。
+    #        date-format:
+    #          DATE: yyyyMMddhhmmss
+    string-format: ${AMR}${TYPE}${DATE}${COUNTER}
+    # キーのプレフィックス
+    key-prefix: amr-task-no
+    # カウンタ名
+    counter-name: AMRタスク番号
+    # 最大値
+    max-value: 9999999999999
+    # 日付形式
+    date-format:
+      # 採番後の文字列の日付
+      # 複数指定可能で、「プレースホルダ（囲み文字無し）: 日付フォーマット」の書式で記述する。プレースホルダ囲み文字無しは、上記のファイル名フォーマットで使用しているものは使えないため注意。
+      DATE: yyyyMMddhhmmss
+      # カウンタマスタのキーを取得するためのke-prefix+KEY_SUFFIXのために使う日付。変更しないこと。
+      KEY_SUFFIX: yyyyMMddhhmmss
+    # 日付タイムゾーン
+    date-time-zone: Asia/Tokyo
+# RCS IPアドレスを取得するための設定
+rcs-ip-address-setting:
+  # task-type : タスクタイプマスタでRCS IPアドレスを取得する
+  # rcs-type : インダクションマスタでRCS IPアドレスを取得する
+  rcs-connect-mode: rcs-type
+# 汎用コードマスタ設定
+mst-common-category:
+  # スキャン機能ID カテゴリ名
+  common-category-scan-function: SCAN_FUNCTION_ID
+#SOAPクライアント設定
+soap-client-setting:
+  # サーバーディフォルトURL
+  default-uri:
+  # サーバーリクエストヘッダ情報
+  request-headers:
+    Content-Type: application/soap+xml;charset=UTF-8;action="urn:doSearch"
+  # 接続タイムアウト時間
+  connect-time-out: 1000
+  # readタイムアウト時間
+  read-time-out: 0
+  #SOAP通信可能桁数
+  number-of-sent-soap-digits:
+    - 15
+    - 16
+# シュートマスタ設定
+chute-master-setting:
+  # デフォルトシュート枝番
+  default-chute-branch-no: "1"
+  # デフォルトシュート枝番の0埋め最大桁数
+  reject-chute-branch-no-zero-padding-max-digit-num: 3
+  # スキャン側返信の時、シュート枝番使用有無フラグ
+  # true:使用 false:使用しない
+  check-user-chute-branch-no: true
+  # 枝番計算スキャンコード条件追加フラグ
+  # シュート枝番を計算する際に、スキャンコードも絞るフラグ。
+  # true：スキャンコードを絞る。性能としては良いが、枝番の振り方がシュートNo＋スキャンコードとなる。
+  # false：スキャンコードを絞らない。性能面で影響はあるが枝番の振り方がシュートNo別となる。
+  chute-branch-no-calc-add-scan-code-condition: true
+  # RejectシュートNo
+  reject-chute-no: REJECT
+  # 割付け時のシュートマスタチェック設定
+  # true: シュートマスタが停止中かどうかまでチェックする。
+  # false: シュートマスタはチェックしない。
+  check-chute-master-when-assign: true
+# バッチ跨ぎ設定
+batch-straddle-setting:
+  # プレフィックス
+  prefix-name: BATCH
+  # バッチ番号フォーマット
+  # 【概要】
+  #   バッチ番号のフォーマットを定義する。
+  # 【説明】
+  #   プレースホルダを文字列中に入れ込むことにより、任意の文字列に置換できる。
+  #   例）${PREFIX}_${DATE} → BATCH_2020051315
+  #      ※バッチ番号内の日付フォーマットは以下の設定とする。
+  #        batch-no-date-format:
+  #          DATE: yyyyMMddHH
+  # 【プレースホルダ】
+  #   ${PREFIX}：プレフィックスが設定される。
+  #   ${xxx}：日付が設定される。「xxx」部分には「バッチ番号内の日付フォーマット」で設定したプレースホルダ（囲み文字無し）に${}で囲んだものを使用する。
+  batch-no-format: ${PREFIX}_${DATE}
+  # バッチ番号内の日付フォーマット
+  # 例）「2019年1月2日 3時4分5秒6ミリ秒」を例にします。
+  # DATE: yyyyMMdd_HHmmss_SSS -> 20190102_030405_006
+  # DATE: yyMd_Hms_S -> 1912_345_6（一桁系は0埋めしなくなる。また、年の場合は2桁「yy」までとなる）
+  # 複数指定可能で、「プレースホルダ（囲み文字無し）: 日付フォーマット」の書式で記述する。プレースホルダ囲み文字無しは、上記のファイル名フォーマットで使用しているものは使えないため注意。
+  batch-no-date-format:
+    DATE: yyyyMMddHH
+  # バッチ番号内の日付タイムゾーン
+  batch-no-date-time-zone: Asia/Tokyo
+# バッチHyway Setting
+batch-create-setting:
+  # バッチ番号フォーマット
+  # 【概要】
+  #   バッチ番号のフォーマットを定義する。
+  # 【説明】
+  #   プレースホルダを文字列中に入れ込むことにより、任意の文字列に置換できる。
+  #   例）${TASK_TYPE}_${DATE} → 到着_20201225
+  #      ※バッチ番号内の日付フォーマットは以下の設定とする。
+  #        batch-no-date-format:
+  #          DATE: yyyyMMdd
+  # 【プレースホルダ】
+  #   ${TASK_TYPE}：タスクタイプが設定される。
+  #   ${xxx}：日付が設定される。「xxx」部分には「バッチ番号内の日付フォーマット」で設定したプレースホルダ（囲み文字無し）に${}で囲んだものを使用する。
+  batch-no-format: ${TASK_TYPE}_${DATE}
+  # バッチ番号内の日付フォーマット
+  # 例）「2019年1月2日 3時4分5秒6ミリ秒」を例にします。
+  # DATE: yyyyMMdd_HHmmss_SSS -> 20190102_030405_006
+  # DATE: yyMd_Hms_S -> 1912_345_6（一桁系は0埋めしなくなる。また、年の場合は2桁「yy」までとなる）
+  # 複数指定可能で、「プレースホルダ（囲み文字無し）: 日付フォーマット」の書式で記述する。プレースホルダ囲み文字無しは、上記のファイル名フォーマットで使用しているものは使えないため注意。
+  batch-no-date-format:
+    DATE: yyyyMMdd
+  # バッチ番号内の日付タイムゾーン
+  batch-no-date-time-zone: Asia/Tokyo
+# 満杯シュート設定
+full-chute-setting:
+  # 満杯シュート段階
+  # 0~3の4段階
+  # level >= 3: 満杯判定
+  # level < 3: 何もしない
+  full-level: 3
+# TrLog
+trlog:
+  # TrLogテーブルのデータを削除する前の日数
+  log-records-deleting-target-day: 14
+# リジェクト設定
+reject-setting:
+  # 通常仕分けの場合、リジェクトシュートに行く時にタスク新規作成するか設定
+  # true:既存のタスク変わらない、リジェクトシュートタスク新規作成
+  # false:リジェクトシュートタスクを作成しない、かつ既存タスク状態を変わらずにそのままリジェクトシュートへ行く
+  # falseはリジェクトシュートの枝番が2つ以上あった場合に、1つしか振り分けることができない
+  normal-sort-new-task: false
+#アップロードサービスのクラス名とCSVNo紐づく
+upload-service-csv-no-setting:
+  csv-no-link-service:
+    # 商品マスタCSV
+    item: uploadItemMasterService
+    # シュートマスタCSV
+    chute: uploadChuteMasterService
+    # 店舗マスタCSV
+    shop: uploadShopMasterService
+    # 作業指示データCSV
+    task: uploadTaskMasterService
+    # CSV実績ファイル
+    result: uploadResultService
+    # デバイスマスタCSV
+    device: uploadDeviceMasterService
+    # 仕分けマスタCSV
+    sorting: uploadSortingMasterService
+    # AMR管理マスタCSV
+    amr: uploadAmrMasterService
+    # AMR-ロケーションマスタCSV
+    location: uploadLocationMasterService
+    # AMR-ポジションマスタCSV
+    position: uploadPositionMasterService
+    # コンテナマスタCSV
+    container: uploadContainerMasterService
+    # コンテナ配置マスタCSV
+    placement: uploadPlacementMasterService
+  # 作業指示ファイルに同じバッチ番号に複数タスクタイプが存在する場合、タスクタイプエラー制御フラグを設定
+  # true: エラー制御する(ディフォルト)
+  # false:エラー制御しない
+  task-type-error-control-flag: true
+  # 作業指示ファイルにバッチ番号はバッチテーブルに存在チェックフラグを設定
+  # true: チェック(ディフォルト)
+  # false:チェックしない
+  batch-no-db-exist-check-flag: true
+#スキャン確定サービスのクラス名紐づく設定
+scan-confirm-service-setting:
+  robot-action-link-service:
+    # スキャン確定サービス(手仕分け)
+    0: scanConfirmManualSortingService
+    # スキャン確定サービス(手仕分け以外)
+    1: scanConfirmAutoSortingService
+  function-id-link-service:
+    # 通常仕分け
+    NormalSortSingle: normalAndReturnSortingServiceImpl
+    # 通常仕分けまとめ投入
+    NormalSortMulti: multiSortingServiceImpl
+    # 返品仕分けシングル投入
+    ReturnSortSingle: normalAndReturnSortingServiceImpl
+    # 作業指示データなし仕分け 到着
+    NoOrderFromUpperSortArrival: noOrderSortingServiceImpl
+    # 作業指示データなし仕分け 発送
+    NoOrderFromUpperSortSend: noOrderSortingServiceImpl
+    # 作業指示データなし仕分け 返品
+    NoOrderFromUpperSortReturnSort: noOrderSortingServiceImpl
+  #新スキャン確定サービス実装クラス紐づく設定
+  work-instruction-link-service:
+    # 作業指示なし
+    0: noWorkInstructionService
+    # 作業指示あり
+    1: workInstructionService
+  work-type-link-service:
+    # シングル投入
+    1: normalAndReturnSortingService2Impl
+    # 手仕分け
+    2: scanConfirmManualSortingService2Impl
+    # まとめ投入
+    3: multiSortingService2Impl
+  # シュートIDレスポンスタイプ
+  # CHUTE_ID = シュートID
+  # CHUTE_NO_AND_CHUTE_BRANCH_NO = シュートNo+シュート枝番
+  chute-id-response-type: CHUTE_ID
+#対象タスク取得サービスクラス紐づく設定
+get-target-task-service-setting:
+  # 手仕分けの場合、スキャン画面に表示される各枝番のページを含むかシュートNo一つに対して1ページ固定とするかの設定。
+  # true: ページに各枝番を含む
+  # false:ページに枝番は一つのみ固定(シュートNoの一番若い枝番が設定)
+  chuteBranchNoMultipleEnabled: true
+# タスクキャンセルの設定
+scan-cancel-task-service-setting:
+  # 再投入（タスクキャンセル）した場合に、バッチのステータスも考慮するかどうかを設定する。
+  # 考慮する場合は、タスクの状態を見て必要であればバッチのステータスも戻す。
+  # 考慮しない場合はタスクだけがステータス戻しを行う
+  # 考慮する（true）、考慮しない（false）
+  should-process-batch-status: true
+  # タスクが「走行中（処理中）」の場合、前キャンセル（再投入）できるかどうか制御フラグを設定
+  # true: 前キャンセル（再投入）できる
+  # false: 前キャンセル（再投入）できない
+  check-process-batch-status-flag: true
+# タスク明細画面サービス設定
+task-service-setting:
+  # タスク明細画面の編集からステータスを戻した場合に、バッチのステータスも考慮するかどうかを設定する。
+  # 考慮する場合は、タスクの状態を見て必要であればバッチのステータスも戻す。
+  # 考慮しない場合はタスクだけがステータス戻しを行う
+  # 考慮する（true）、考慮しない（false）
+  should-process-batch-status: true
+# OPSモード設定
+ops-setting:
+  # OPS使用設定。
+  # 使用する（true）、使用しない（false）
+  ops-flag: false
+# Token Verification
+auth:
+  # 0:禁止 1:有効
+  enabled: 1
+  verifyUrl: http://20.194.194.176:8080/verifyToken
+  # ローカル起動時ドメイン名
+  origin: http://localhost:${server.port}
+  excludePathPatterns: /login,/*.html,/*.css,/*.js,/swagger-ui.html,/swagger-resources/**,/webjars/**,/*/api-docs,/actuator,/actuator/**,/hyway/**,/api/**,/func/full-chute,/rcsbox-wes/**,/carryrcs-wes/**
+#amrのrcsの設定
+amr-rcs-setting:
+  ##RCSサーバのURLコンテキストパス(KeyFormat: context-url.<RCSType>)
+  context-url: http://40.81.199.206:7100/api/plusAutomation/
+  #context-url: http://40.81.193.174:7100/api/plusAutomation/
+  #RCSタイプ (KeyFormat: rcs-type.<SEER>)
+  rcs-type: SEER
+  #ルートマップURL (KeyFormat: route-map-url.<areaNo>)
+  route-map-dir: /home/plusaseer/AMR-WES-STAGING/wesserver/routemap
+  route-map-url: /amr/download-map-image/plusAcube.jpg
+  #JACKパラメータ
+  jack-height:
+  #棚の識別パラメータ
+  recognize-flag: false
+  #運送状シーケンス状
+  complete-flag: true
+  #シーケンスすぐに終了状態
+  immediate-flag: true

@@ -1,0 +1,426 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.plus_automation</groupId>
+    <artifactId>api-plugin</artifactId>
+    <version>1.0.0</version>
+    <packaging>pom</packaging>
+    <description>plus automation api-plugin project</description>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.2.7.RELEASE</version>
+    </parent>
+
+    <modules>
+        <module>api-plugin-common</module>
+        <module>api-plugin-repository</module>
+        <module>api-plugin-service</module>
+        <module>api-plugin-controller</module>
+        <module>api-plugin-cache</module>
+    </modules>
+
+    <properties>
+        <!-- springBoot version -->
+        <springboot.version>2.2.7.RELEASE</springboot.version>
+
+        <maven-compiler.version>3.6.1</maven-compiler.version>
+        <!-- メイン設定 -->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <java.version>11</java.version>
+
+        <!-- SpringBootのコアライブラリ郡 -->
+        <mybatis-spring-boot-starter.version>2.1.1
+        </mybatis-spring-boot-starter.version>
+        <!-- テスト関連 -->
+        <junit-json-params.version>5.5.2-r0</junit-json-params.version>
+        <spring-test-dbunit.version>1.3.0</spring-test-dbunit.version>
+        <dbunit.version>2.6.0</dbunit.version>
+        <powermock-module-junit4.version>2.0.9</powermock-module-junit4.version>
+        <powermock-api-mockito2.version>2.0.9</powermock-api-mockito2.version>
+        <!-- ユティリティ -->
+        <jbvext.version>0.0.11</jbvext.version>
+        <mapstruct.version>1.3.1.Final</mapstruct.version>
+        <guava.version>29.0-jre</guava.version>
+        <orangesignal-csv.version>2.2.1</orangesignal-csv.version>
+        <libphonenumber.version>8.11.3</libphonenumber.version>
+        <jasperreports.version>6.11.0</jasperreports.version>
+        <spotbugs-annotations.version>3.1.12</spotbugs-annotations.version>
+        <fastutil.version>8.3.0</fastutil.version>
+        <commons-text.version>1.8</commons-text.version>
+        <commons-collections4.version>4.1</commons-collections4.version>
+        <jna.version>5.5.0</jna.version>
+        <!-- Springfoxライブラリセット -->
+        <springfox.version>2.10.5</springfox.version>
+        <swagger.version>1.6.1</swagger.version>
+        <awaitility.version>4.0.3</awaitility.version>
+        <spring-plugin-core.version>2.0.0.RELEASE</spring-plugin-core.version>
+        <!-- ローカルライブラリ（lib） -->
+        <epctagcoder.version>0.0.6-SNAPSHOT</epctagcoder.version>
+        <bcpissuelibrary.version>1.0</bcpissuelibrary.version>
+        <!-- ビルドプラグイン -->
+        <lombok.version>1.18.18</lombok.version>
+        <delombok.version>1.18.16.0</delombok.version>
+        <jacoco-maven-plugin.version>0.8.2</jacoco-maven-plugin.version>
+        <spotbugs-maven-plugin.version>3.1.12.2</spotbugs-maven-plugin.version>
+        <spotbugs.version>4.0.0-beta4</spotbugs.version>
+        <fb-contrib.version>7.4.7</fb-contrib.version>
+        <findsecbugs-plugin.version>1.10.1</findsecbugs-plugin.version>
+        <swagger-codegen-maven-plugin.version>2.4.10</swagger-codegen-maven-plugin.version>
+        <javax.servlet.version>3.1.0</javax.servlet.version>
+        <mockio-core.version>3.7.7</mockio-core.version>
+    </properties>
+    <!-- リポジトリ設定 -->
+    <repositories>
+        <!-- +A Maven Publicリポジトリ -->
+        <repository>
+            <id>maven-public</id>
+            <url>http://20.63.137.107:8081/repository/maven-public/</url>
+            <layout>default</layout>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+        <!-- Mavenセントラルリポジトリ -->
+        <repository>
+        <id>central</id>
+        <url>https://repo1.maven.org/maven2/</url>
+        </repository>
+
+        <!-- JCenterリポジトリ -->
+        <repository>
+        <id>jcenter</id>
+        <url>https://jcenter.bintray.com/</url>
+        </repository>
+
+        <!-- JFrogリポジトリ -->
+        <repository>
+        <name>jcenter</name>
+        <id>jcenter-snapshots</id>
+        <url>https://oss.jfrog.org/artifactory/oss-snapshot-local/</url>
+        </repository>
+    </repositories>
+
+    <dependencies>
+        <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok-maven-plugin -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok-maven-plugin</artifactId>
+            <version>${delombok.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.epctagcoder</groupId>
+            <artifactId>epctagcoder</artifactId>
+            <version>0.0.6-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>${mockio-core.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- [Lombokライブラリ] -->
+        <!-- Getter/Setterなどの記述を無くし、アノテーションのみでビルド時に自動生成を行う仕組みを使うために使用。 -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+            <optional>true
+            </optional> <!-- コンパイルする時だけ必要なのでjar/warにパッケージングされないようにする -->
+        </dependency>
+        <!-- テスト関連 =============================================== -->
+        <!-- [Fastutilライブラリ] -->
+        <!-- 高速なコレクションライブラリ。特にプリミティブ型のリストが早くなる。 -->
+        <dependency>
+            <groupId>it.unimi.dsi</groupId>
+            <artifactId>fastutil</artifactId>
+            <version>${fastutil.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.orangesignal</groupId>
+            <artifactId>orangesignal-csv</artifactId>
+            <version>${orangesignal-csv.version}</version>
+        </dependency>
+        <!-- [Jackson Datatype: JSR310 ライブラリ] -->
+        <!-- Java 8 Date＆Time APIの型をサポートするアドオンモジュール。 -->
+        <!-- コントローラ層でJSONとしてリクエストを受ける、返却する際に使用。 -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+        </dependency>
+        <!-- [Awaitilityライブラリ] -->
+        <!-- 非同期処理のテストを簡単に行うためのライブラリ。 -->
+        <dependency>
+            <groupId>org.awaitility</groupId>
+            <artifactId>awaitility</artifactId>
+            <version>${awaitility.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- [Spotbugsのアノテーションを追加] -->
+        <!-- SpotBugsによる警告を抑制するための、@SuppressFBWarningsを使用可能にする。 -->
+        <dependency>
+            <groupId>com.github.spotbugs</groupId>
+            <artifactId>spotbugs-annotations</artifactId>
+            <version>${spotbugs-annotations.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <!-- [Guava ライブラリ] -->
+        <!-- Google謹製の便利ライブラリ。 -->
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${guava.version}</version>
+        </dependency>
+
+
+        <!-- Springfoxライブラリセット =============================== -->
+        <!-- Springベースで作成したアプリケーションのWEB API仕様書を作成するライブラリ。 -->
+        <!-- サーバ起動後に「/swagger-ui.html」でオンライン仕様書が閲覧できるようになる。 -->
+
+        <!-- [Springfoxのコアライブラリ] -->
+        <!-- Springfoxの必須ライブラリ。必ず入れる。 -->
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-core</artifactId>
+            <version>${springfox.version}</version>
+            <!-- [除外設定] -->
+            <exclusions>
+                <!-- [Spring Plugin Coreを除外] -->
+                <!-- Springfoxのspring-plugin-coreがで1.2.0.RELEASE（Springfox3.0.0-SNAPSHOT現在）のため除外。 -->
+                <exclusion>
+                    <groupId>org.springframework.plugin</groupId>
+                    <artifactId>spring-plugin-core</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!-- [Spring Plugin Coreライブラリ] -->
+        <!-- 上記、Springfoxで除外したSpring Plugin Coreの最新を追加。 -->
+        <dependency>
+            <groupId>org.springframework.plugin</groupId>
+            <artifactId>spring-plugin-core</artifactId>
+            <version>${spring-plugin-core.version}</version>
+        </dependency>
+
+        <!-- [Springfox Web MVCライブラリ] -->
+        <!-- Spring Web MVCに対応させるために必要。 -->
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-spring-webmvc</artifactId>
+            <version>${springfox.version}</version>
+        </dependency>
+
+        <!-- [Springfox Data RESTライブラリ] -->
+        <!-- Spring Data RESTに対応させるために必要。 -->
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-data-rest</artifactId>
+            <version>${springfox.version}</version>
+        </dependency>
+
+        <!-- [SpringfoxのSwagger2ライブラリ] -->
+        <!-- Swaggerの設定を有効化し、Swagger準拠のJSONを生成するライブラリ。 -->
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+            <version>${springfox.version}</version>
+            <!-- 除外設定 -->
+            <!-- 下記一つを除外して、dependencyとして追加した経緯は下記警告ログを削除するため。 -->
+            <!-- 参考Issues：https://github.com/springfox/springfox/issues/2265 -->
+            <!-- 元々はswagger-annotationsを除外していたが、除外する必要がないことが分かった。 -->
+            <!-- 参考URL：https://doc.xiaominfo.com/en/format-exception.html -->
+            <exclusions>
+                <!-- <exclusion> <groupId>io.swagger</groupId> <artifactId>swagger-annotations</artifactId>
+                  </exclusion> -->
+                <exclusion>
+                    <groupId>io.swagger</groupId>
+                    <artifactId>swagger-models</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <!-- [SpringfoxのSwagger Annotationsライブラリ] -->
+        <!-- Swaggerのドキュメントをアノテーションで使えるようにする。 -->
+        <!-- <dependency> <groupId>io.swagger</groupId> <artifactId>swagger-annotations</artifactId>
+          <version>${swagger.version}</version> </dependency> -->
+        <!-- [SpringfoxのSwagger Modelsライブラリ] -->
+        <!-- Swaggerのエンティティにドキュメントアノテーションを使えるようにする。 -->
+        <dependency>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-models</artifactId>
+            <version>${swagger.version}</version>
+        </dependency>
+        <!-- [Junit Json Paramsライブラリ] -->
+        <!-- JUnit 5の@ParameterizedTestをJSONで行うことのできるテストライブラリ。 -->
+        <dependency>
+            <groupId>net.joshka</groupId>
+            <artifactId>junit-json-params</artifactId>
+            <version>${junit-json-params.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- [Spring Test DBUnitライブラリ] -->
+        <!-- SpringでDBUnitを使うライブラリ。 -->
+        <dependency>
+            <groupId>com.github.springtestdbunit</groupId>
+            <artifactId>spring-test-dbunit</artifactId>
+            <version>${spring-test-dbunit.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- [DBUnitライブラリ] -->
+        <!-- テストでDBへテストデータを入れるために使用。 -->
+        <dependency>
+            <groupId>org.dbunit</groupId>
+            <artifactId>dbunit</artifactId>
+            <version>${dbunit.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- [PowerMockライブラリ] -->
+        <!-- テストで使う。staticメソッドなどをモック化するために使用。-->
+        <!-- https://github.com/powermock/powermock/ -->
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-module-junit4</artifactId>
+            <version>${powermock-module-junit4.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- [PowerMock Mockito API extension] -->
+        <!-- staticメソッドなどをモック化するために使用。-->
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-api-mockito2</artifactId>
+            <version>${powermock-api-mockito2.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-test-autoconfigure</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- [Apache Commons Textライブラリ] -->
+        <!-- Stringを操作するための便利ユティリティライブラリ。 -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-text</artifactId>
+            <version>${commons-text.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-collections4</artifactId>
+            <version>${commons-collections4.version}</version>
+        </dependency>
+    </dependencies>
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- spring boot dependencies -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${springboot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+                <excludes>
+                    <exclude>**/*.ttf</exclude>
+                    <exclude>**/*.woff</exclude>
+                </excludes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>false</filtering>
+                <includes>
+                    <include>**/*.ttf</include>
+                    <include>**/*.woff</include>
+                </includes>
+            </resource>
+        </resources>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                </configuration>
+            </plugin>
+        </plugins>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                    <configuration>
+                        <finalName>${project.build.finalName}</finalName>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>repackage</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+    <!-- レポート設定 -->
+    <reporting>
+        <plugins>
+            <!-- JaCoCoレポートの設定 -->
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <!-- 非集計レポートを選択する -->
+                            <report>report</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+        </plugins>
+    </reporting>
+</project>

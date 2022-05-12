@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration>
+<!-- 上記DOCTYPEは、Eclipse上でDTDが無いことの警告を回避するために入れている。XML検証を無効にしたくないため対処。 -->
+<configuration>
+    <!-- テストクラスはSpotBugsの対象にしない。 -->
+    <Match>
+
+        <Class name="~.*Test$"/>
+    </Match>
+    <Match>
+        <Class name="~.*\.Test.*$"/>
+    </Match>
+</configuration>

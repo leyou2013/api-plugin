@@ -1,0 +1,18 @@
+# === 共通プロファイル ================================================
+# ●SpringBoot共通設定
+spring:
+  # 使用プロファイル設定
+  profiles:
+    # 有効にする設定ファイル
+    # ・同ファイルの「application-xxx.yml」にあるxxx部分を指定する
+    active: local
+  # 出力設定
+  output:
+    ansi:
+      # コンソールログのANSIカラー出力の有効化(always)/無効化(never)/自動化(detect)←デフォルト設定
+      # 「always」は強制的にカラー表示になるが、Windowsの場合"server/tool/ansicon/x64/install.bat"をインストールしていないとカラーにならないため注意。
+      enabled: always
+# ●ログ共通設定
+logging:
+  # ログファイルのパス
+  file: log/server.log
